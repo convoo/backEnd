@@ -5,6 +5,9 @@ module.exports = function (app, r) {
    
    var api = require('./controllers')(r);
    
+//---INDEX
+    app.route('/')                          .get(api.index);
+   
  //---AUTH  
     app.route('/auth/token/')               .get(api.authToken);                //Make JWT
     app.route('/auth/twitter/')             .get(api.authTwitter);              //Make Twitter Request Token

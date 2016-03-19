@@ -20,6 +20,13 @@ module.exports = function (r) {
     
     var m = {};
     var f = require('../functions/f.js')(r, uuid, twitter, jwt, aws);
+    
+    
+    m.index = function(req, res){
+        res.json({
+            message: "Welcome to Convoo's API" 
+        })
+    }
 
 //----------------------------- MAKE JWT TOKEN 
     m.authToken = function (req, res) {
