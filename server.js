@@ -24,10 +24,6 @@ app.use(express.static('public'));
 require('./setupRethink.js')(r);
    
 //--SOCKETS
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/public/index.html');
-});
-
 require('./sockets/events.js')(io,r);    
     
 //--API
