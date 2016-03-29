@@ -47,7 +47,7 @@ module.exports = function(r){
         console.log('Making Twittr Request Token');    
         f.tokens.makeTwitterRequestToken(function (redirectUrl, requestToken, requestTokenSecret) {
           console.log('Sending Twittr Request Token');    
-          io.to(socket.id).emit('twitterRequestToken', {requestToken: requestToken, requestTokenSecret: requestTokenSecret});
+          io.to(socket.id).emit('twitterRequestToken', {redirectUrl:redirectUrl, requestToken: requestToken, requestTokenSecret: requestTokenSecret});
         })
     };
     
