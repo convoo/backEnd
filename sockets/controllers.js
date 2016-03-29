@@ -24,8 +24,7 @@ module.exports = function(r){
     m.jwt = function (socket, io, msg) {
             
       
-            if(msg.jwt){
-                       
+            if(msg.jwt){                   
             console.log('You sent me a token');
             var userID = f.tokens.readToken(msg.jwt).user_id;
             f.users.seenUser(userID, socket.id, '/');
@@ -40,6 +39,16 @@ module.exports = function(r){
             io.to(socket.id).emit('jwt', {token:token});
             
             }
+    };
+
+//----------------------------- TWITTER REQUEST TOKEN  
+    
+    m.twitterRequestToken = function (req, res) {
+        console.log('Making Twittr Request Token');    
+        f.tokens.makeTwitterRequestToken(function (redirectUrl, requestToken, requestTokenSecret) {
+          console.log('Sending Twittr Request Token');    
+          io.to(socket.id).emit('twitterRequestToken', {requestToken: requestToken, requestTokenSecret: requestTokenSecret});
+        })
     };
     
 //----------------------------- ON DISCONECTED

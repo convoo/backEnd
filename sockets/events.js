@@ -16,6 +16,10 @@ module.exports = function (io, r) {
         socket.on('jwt', function (msg) {
             sockets.jwt(socket, io, msg);
         });
+        
+        socket.on('twitterRequestToken', function (msg) {
+            sockets.twitterRequestToken(socket, io, msg);
+        });
 
         socket.on('disconnect', function () {
             sockets.disconnect(socket, r);
