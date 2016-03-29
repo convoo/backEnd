@@ -43,7 +43,7 @@ module.exports = function(r){
 
 //----------------------------- TWITTER REQUEST TOKEN  
     
-    m.twitterRequestToken = function (req, res) {
+    m.twitterRequestToken = function (socket, io, msg) {
         console.log('Making Twittr Request Token');    
         f.tokens.makeTwitterRequestToken(function (redirectUrl, requestToken, requestTokenSecret) {
           console.log('Sending Twittr Request Token');    
