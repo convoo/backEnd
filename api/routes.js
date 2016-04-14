@@ -17,6 +17,9 @@ module.exports = function (app, r) {
     app.route('/user/delete/:userID')      .get(api.userDelete);
     app.route('/user/profile/:userID')     .get(api.userProfile);
     app.route('/user/logs/:userID')        .get(api.userLogs);
+    
+//---FETCHING
+    app.route('/fetch')                .get(api.fetchUrl);
 //---CATCH ALL
     app.route('/*').get(function (req, res) {
         res.sendStatus(404);
