@@ -12,7 +12,6 @@
   "dependencies": {
     "aws-sdk": "^2.2.41",
     "body-parser": "^1.15.0",
-    "chai": "^3.5.0",
     "compression": "^1.6.1",
     "cookie-parser": "^1.4.1",
     "dotenv": "^2.0.0",
@@ -25,6 +24,7 @@
     "uuid-js": "^0.7.5"
   },
     "devDependencies": {
+    "chai": "^3.5.0",
     "mocha": "^2.4.5"
 
   }
