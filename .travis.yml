@@ -1,12 +1,4 @@
 language: node_js
 node_js:
-    -"5"
-branches:
-    only:
-        - 10_install_mocha_chai
-before_script:
-    - npm install mocha
-notifications:
-  slack: convoo:WcNIRMu8IsTAoqClFDoSP7vi
-  
-  
+- '0.11'
+- '0.10'
