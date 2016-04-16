@@ -11,11 +11,8 @@
 
 var aws = require('aws-sdk');
 
-module.exports = function () {
-    var m = {};
-
 //----------------------------- BASE64 to S3
-    m.s3PutBase64 = function (image, folder, imageName) {
+exports.s3PutBase64 = function (image, folder, imageName) {
 
         var buf = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
         var s3 = new aws.S3();
@@ -35,5 +32,3 @@ module.exports = function () {
         });
     };
 //----------------------------- END
-    return m;
-};

@@ -26,14 +26,10 @@
 'use strict';
 var r = require("rethinkdb");
 var log = require('./log.js');
-
-module.exports = function () {
-    var m = {};
-
-    var table = r.db(process.env.RETHINK_DB).table("users");
+var table = r.db(process.env.RETHINK_DB).table("users");
 
 //----------------------------- ADD USER
-    m.add = function (userType, userID, socketID, url) {
+exports.add = function (userType, userID, socketID, url) {
 
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
@@ -64,7 +60,7 @@ module.exports = function () {
 
  //----------------------------- SEEN USER
 
- m.seen = function (userID, socketID, url) {
+exports.seen = function (userID, socketID, url) {
 
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
@@ -93,7 +89,7 @@ module.exports = function () {
 
   //----------------------------- DISCONECTED USER
 
- m.disconnect = function (socketID) {
+exports.disconnect = function (socketID) {
 
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
@@ -133,7 +129,7 @@ module.exports = function () {
     //     })
 
 
-    m.twitterDetails = function (userID, accessToken, accessTokenSecret, twitterDetails) {
+exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitterDetails) {
 
         var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
         c.then(function (conn) {
@@ -159,7 +155,7 @@ module.exports = function () {
 
 
 //----------------------------- UPGRADE USER
-    m.upgrade = function (userID, photoOriginal, twitterID, lastUpdated) {
+exports.upgrade = function (userID, photoOriginal, twitterID, lastUpdated) {
        // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
@@ -189,7 +185,7 @@ module.exports = function () {
 
 
 //----------------------------- DELETE USER
-    m.del = function (userID) {
+exports.del = function (userID) {
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
@@ -214,7 +210,7 @@ module.exports = function () {
     };
 
 //----------------------------- MAKE USER ADMIN
-    m.makeAdmin = function(userID, byUserID){
+exports.makeAdmin = function(userID, byUserID){
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
@@ -243,7 +239,7 @@ module.exports = function () {
 
 //-----------------------------  ONLINE USERS
 
-    m.onlineAll = function(callback){
+exports.onlineAll = function(callback){
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
@@ -269,7 +265,7 @@ module.exports = function () {
 
 //-----------------------------  EDIT PROFILE
 
-    m.edit = function(userID, fullName, email, bio, emailMe, notifyMe){
+exports.edit = function(userID, fullName, email, bio, emailMe, notifyMe){
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
@@ -297,7 +293,7 @@ module.exports = function () {
 
 //-----------------------------  GET PROFILE
 
-    m.get = function (userID) {
+exports.get = function (userID) {
         var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
         return c.then(function (conn) {
             return table.get(userID)
@@ -306,7 +302,7 @@ module.exports = function () {
     };
 
 //----------------------------- GET LOGS
-    m.getLogs = function(userID){
+exports.getLogs = function(userID){
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
@@ -337,5 +333,3 @@ module.exports = function () {
 
 
 //----------------------------- END
-    return m;
-};

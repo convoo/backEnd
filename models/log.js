@@ -12,13 +12,10 @@
 'use strict';
 
 var r = require("rethinkdb");
-
-module.exports = function () {
-    var m = {};
-    var table = r.db(process.env.RETHINK_DB).table("logs");
+var table = r.db(process.env.RETHINK_DB).table("logs");
 
 //----------------------------- MAKE LOG
-    m.add = function (logType, userID, url) {
+exports.add = function (logType, userID, url) {
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
@@ -45,5 +42,3 @@ module.exports = function () {
     };
 
 //----------------------------- END
-    return m;
-};

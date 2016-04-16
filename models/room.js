@@ -19,15 +19,11 @@
 
 var r = require("rethinkdb");
 var log = require('./log.js');
-
-module.exports = function () {
-    var m = {};
-
-    var table = r.db(process.env.RETHINK_DB).table("rooms");
+var table = r.db(process.env.RETHINK_DB).table("rooms");
 
 
 //----------------------------- ADD ROOM
-    m.add = function (userID, roomName) {
+exports.add = function (userID, roomName) {
 
         console.log(userID);
         console.log(roomName);
@@ -61,7 +57,7 @@ module.exports = function () {
     };
 
 //----------------------------- DELETE ROOM
-    m.del = function (userID, roomID) {
+exports.del = function (userID, roomID) {
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
@@ -87,5 +83,3 @@ module.exports = function () {
     };
 
 //----------------------------- END
-    return m;
-};
