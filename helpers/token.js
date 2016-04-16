@@ -24,7 +24,7 @@ exports.makeID = function () {
 
 //----------------------------- MAKE TOKEN
 exports.makeJWT = function (userID, userType, url) {
-        return jwt.sign({ user_type: userType, user_id: userID, iss: process.env.WEB_SITE }, process.env.AUTH_SECRET);
+        return jwt.sign({ user_type: userType, user_id: userID, iss: url }, process.env.AUTH_SECRET);
     };
 
 //----------------------------- READ TOKEN
@@ -33,7 +33,7 @@ exports.readJWT = function (authToken) {
             var token = jwt.verify(authToken, process.env.AUTH_SECRET);
             return { type: token.user_type, user_id: token.user_id };
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             return { type: 'INVALID'};
         }
     };
