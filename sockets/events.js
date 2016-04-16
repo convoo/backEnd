@@ -7,7 +7,7 @@
 
 module.exports = function (io) {
 
-    var sockets = require('./controllers.js')(r);
+    var sockets = require('./controllers.js');
 
     //-- AUTH CONNECT & DISCONNECT
     io.on('connection', function (socket, msg) {
