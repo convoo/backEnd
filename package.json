@@ -6,7 +6,8 @@
   "scripts": {
     "test": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "start": "node server.js",
-    "test:local": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive"
+    "test:local": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive",
+    "apidoc": "apidoc -i api/ -o apidoc/"
   },
   "author": "",
   "license": "ISC",
@@ -30,5 +31,9 @@
     "istanbul": "^1.0.0-alpha.2",
     "mocha": "^2.4.5",
     "mocha-lcov-reporter": "^1.2.0"
+  },
+  "apidoc":{
+    "title": "Convoo API",
+    "url" : "https://api.website.com"
   }
 }

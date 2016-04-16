@@ -1,0 +1,17 @@
+{
+  "firebase": "awesomeapi",
+  "rules": {
+    ".write": false,
+    ".read": true
+  },
+  "public": "apidoc",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ],
+  "rewrites": [ {
+    "source": "**",
+    "destination": "/index.html"
+  } ]
+}
