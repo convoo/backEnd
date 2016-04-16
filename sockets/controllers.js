@@ -7,14 +7,9 @@
 
 var auth = require('./auth.js');
 var user = require('./user.js');
-var room = require('./room.js');
+var room = require('./rooexports.js');
 
-module.exports = function(){
-    var m = {};
 
-    m.auth = auth;
-    m.user = user;
-    m.room = room;
-
-    return m;
-};
+exports.auth = auth;
+exports.user = user;
+exports.room = room;

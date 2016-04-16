@@ -3,12 +3,8 @@
 var token = require('../helpers/token.js');
 var user = require('../models/user.js');
 
-module.exports = function(){
-
-  var m = {};
-
   //----------------------------- ON CONNECTOIN
-    m.jwt = function (socket, io, msg) {
+exports.jwt = function (socket, io, msg) {
 
 
             if(msg.jwt){
@@ -30,7 +26,7 @@ module.exports = function(){
 
 //----------------------------- TWITTER REQUEST TOKEN
 
-    m.twitterRequestToken = function (socket, io, msg) {
+exports.twitterRequestToken = function (socket, io, msg) {
         console.log('Making Twittr Request Token');
         token.makeTwitterRequest(function (redirectUrl, requestToken, requestTokenSecret) {
           console.log('Sending Twittr Request Token');
@@ -39,15 +35,12 @@ module.exports = function(){
     };
 
 //----------------------------- ON DISCONECTED
-    m.disconnect = function (socket) {
+exports.disconnect = function (socket) {
             user.disconnect(socket.id);
     };
 
 //----------------------------- ON LOGOUT
-    m.logout = function (socket) {
+exports.logout = function (socket) {
 
     };
-
-    return m;
-}
 

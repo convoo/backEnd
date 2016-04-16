@@ -8,21 +8,15 @@
 var user = require('./user.js'),
   auth = require('./auth.js');
 
-module.export = function () {
-
-    var m = {};
-
-    m.index = function(req, res){
+exports.index = function(req, res){
         res.json({
             message: "Welcome to Convoo's API"
         })
-    };
+    }
 
-    m.user = user;
-    m.auth = auth;
+exports.user = user
+exports.auth = auth
 
-    return m;
-}
 
 
 

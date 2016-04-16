@@ -5,7 +5,7 @@
 ///////////////----------------------------- EVENTS
 'use strict';
 
-module.exports = function (io, r) {
+module.exports = function (io) {
 
     var sockets = require('./controllers.js')(r);
 
