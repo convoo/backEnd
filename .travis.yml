@@ -1,9 +1,9 @@
 language: node_js
 node_js:
-    -"4"
+    -"5"
 branches:
     only:
-        - 10_nstall_mocha_chai
+        - 10_install_mocha_chai
 before_script:
     - npm install mocha
 notifications:
