@@ -15,7 +15,7 @@
             // TODO: Where is the user
             // TODO: Upgrade user from visitor to user by twitter
             // TODO: Upgrade user from user to admin only by admin
-            // TODO: Discuss, user states: 
+            // TODO: Discuss, user states:
                         // online = they are connected to a socked
                         // offline = they are not connected to a socked
                         // hidden = they are connected to a socked to but are not identifiable
@@ -24,16 +24,19 @@
                         // user blocked= they are connected to a socked to but are blocked from communicating/@/follow with another user
 
 'use strict';
+var r = require("rethinkdb");
+var log = require('./log.js');
 
-module.exports = function (r, logs) {
+module.exports = function () {
     var m = {};
+
     var table = r.db(process.env.RETHINK_DB).table("users");
 
 //----------------------------- ADD USER
-    m.addUser = function (userType, userID, socketID, url) {
-        
+    m.add = function (userType, userID, socketID, url) {
+
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
-        
+
         c.then(function(conn){
             // Insert user
             table.insert({
@@ -54,24 +57,24 @@ module.exports = function (r, logs) {
                 conn.close();
             });
         });
-        
+
         // make log
-        logs.makeLog('New ' + userType +'!', userID, url);
+        log.add('New ' + userType +'!', userID, url);
     };
-    
+
  //----------------------------- SEEN USER
- 
- m.seenUser = function (userID, socketID, url) {
-          
+
+ m.seen = function (userID, socketID, url) {
+
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
-        
+
         c.then(function(conn){
-            // update socket id 
+            // update socket id
             table.filter({id:userID}).update({
                 socket_id: socketID,
                 last_seen: r.now(),
                 status:'online'
-             
+
             })
             .run(conn)
             // Catch any errors
@@ -83,23 +86,23 @@ module.exports = function (r, logs) {
                 conn.close();
             });
         });
-        
+
         // make log
-        logs.makeLog('Updated Socket ID!', userID, url);
+        log.add('Updated Socket ID!', userID, url);
  };
- 
+
   //----------------------------- DISCONECTED USER
- 
+
  m.disconnect = function (socketID) {
-          
+
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
-        
+
         c.then(function(conn){
-            // update socket id 
+            // update socket id
             table.filter({socket_id:socketID}).update({
                 last_seen: r.now(),
                 status:'offline'
-             
+
             })
             .run(conn)
             // Catch any errors
@@ -111,15 +114,15 @@ module.exports = function (r, logs) {
                 conn.close();
             });
         });
-  
+
  };
-    
+
     //----------------------------- UPDATE USERS TWITTER DETAILS
     // TODO: Save twitter details to rethink!
     // Try to find a user with the same [access Token] if you find one, update the twitter details in rethnk, then re issue the jwt cookie
     // If you dont find one, find a user with the same [userID] and update the twitter details
     // Why? If a user deletes his jwt then registers again he will have lots of accounts! bad :(
-        
+
     //r.db('website').table('users').filter({twitter:{access_token: accessToken}})
     //r.db('website').table('users').filter({id:userID})
     //r.db('website').table('users').filter({id:userID}).update({})
@@ -128,15 +131,15 @@ module.exports = function (r, logs) {
     //    last_seen: r.now(),
     //    twitter: {twitterDetails}
     //     })
-    
-    
+
+
     m.twitterDetails = function (userID, accessToken, accessTokenSecret, twitterDetails) {
 
         var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
         c.then(function (conn) {
             // Insert user
             table.update({
-                
+
             })
                 .run(conn)
             // Catch any errors
@@ -148,18 +151,18 @@ module.exports = function (r, logs) {
                     conn.close();
                 });
         });
-        
+
         // make log
-  logs.makeLog('Upgrade visitor to user ', userID, "/");
+  log.add('Upgrade visitor to user ', userID, "/");
 
     };
 
-    
+
 //----------------------------- UPGRADE USER
-    m.upgradeUser = function (userID, photoOriginal, twitterID, lastUpdated) {
+    m.upgrade = function (userID, photoOriginal, twitterID, lastUpdated) {
        // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
-        
+
         c.then(function(conn){
             // Insert user
             table.get(userID).update({
@@ -177,19 +180,19 @@ module.exports = function (r, logs) {
                 conn.close();
             });
         });
-        
+
         // make log
-        logs.makeLog('Upgrade visitor to user ', userID, "/");
+        log.add('Upgrade visitor to user ', userID, "/");
     };
 
 
 
-    
+
 //----------------------------- DELETE USER
-    m.deleteUser = function (userID) {
+    m.del = function (userID) {
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
-        
+
         c.then(function(conn){
             // Insert user
             table.get(userID).update({
@@ -205,16 +208,16 @@ module.exports = function (r, logs) {
                 conn.close();
             });
         });
-        
+
         // make log
-        logs.makeLog('Delete User ' + userID, userID, "/");
+        log.add('Delete User ' + userID, userID, "/");
     };
- 
+
 //----------------------------- MAKE USER ADMIN
-    m.makeUserAdmin = function(userID, byUserID){
+    m.makeAdmin = function(userID, byUserID){
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
-        
+
         c.then(function(conn){
             // Update user_type to admin
             table.get(userID).update({
@@ -230,20 +233,20 @@ module.exports = function (r, logs) {
                 conn.close();
             });
         });
-        
+
         // make log
-        // TODO: Handle multiple users and other objects when making logs
-        logs.makeLog('Make Admin ' + userID, byUserID, "/");
+        // TODO: Handle multiple users and other objects when making log
+        log.add('Make Admin ' + userID, byUserID, "/");
     };
-    
-    
-    
+
+
+
 //-----------------------------  ONLINE USERS
 
-    m.onlineUsers = function(callback){
+    m.onlineAll = function(callback){
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
-        
+
         c.then(function(conn){
             // Update user_type to admin
             table.filter({
@@ -260,16 +263,16 @@ module.exports = function (r, logs) {
                 conn.close();
             });
         });
-        
+
 
     };
-    
+
 //-----------------------------  EDIT PROFILE
 
-    m.editProfile = function(userID, fullName, email, bio, emailMe, notifyMe){
+    m.edit = function(userID, fullName, email, bio, emailMe, notifyMe){
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
-        
+
         c.then(function(conn){
             // Update user_type to admin
        table.filter({id:userID}).update({
@@ -278,7 +281,7 @@ module.exports = function (r, logs) {
                 email: email,
                 bio: bio,
                 email_me: emailMe,
-                notify_me: notifyMe,           
+                notify_me: notifyMe,
             })
             .run(conn)
             // Catch any errors
@@ -291,17 +294,47 @@ module.exports = function (r, logs) {
             });
         });
     };
-    
+
 //-----------------------------  GET PROFILE
 
-    m.getProfile = function (userID) {
+    m.get = function (userID) {
         var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
         return c.then(function (conn) {
             return table.get(userID)
                 .run(conn);
         });
     };
-    
+
+//----------------------------- GET LOGS
+    m.getLogs = function(userID){
+        // connect
+        var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
+
+        c.then(function(conn){
+            // Get all logs by action_by userID
+            table.filter({
+                action_by: userID
+            })
+            .run(conn)
+            .then(function(cursor){
+                return cursor.toArray();
+            })
+            .then(function(logs){
+                console.log(logs);
+                return logs;
+            })
+            // Catch any errors
+            .catch(function(err){
+                console.log(err);
+            })
+            // Close the connection
+            .finally(function(logs){
+                conn.close();
+                return logs;
+            });
+        });
+    };
+
 
 //----------------------------- END
     return m;

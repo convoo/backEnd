@@ -3,17 +3,17 @@
 /* global console */
 /* global module */
 
-// TODO: Figure out cloud front 
+// TODO: Figure out cloud front
 
 ///////////////----------------------------- AWS
- 
+
 'use strict';
 
-module.exports = function (r, aws) {
-    var m = {};
-    var table = r.db(process.env.RETHINK_DB).table("logs");
+var aws = require('aws-sdk');
 
-   
+module.exports = function () {
+    var m = {};
+
 //----------------------------- BASE64 to S3
     m.s3PutBase64 = function (image, folder, imageName) {
 

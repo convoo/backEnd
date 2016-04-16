@@ -3,13 +3,25 @@
 /* global console */
 /* global module */
 ///////////////----------------------------- TOKENS
-// TODO: Save twitter details to rethink 
-            
+// TODO: Save twitter details to rethink
+
 'use strict';
-module.exports = function (r, uuid, twitter, jwt) {
-    
+
+var uuid = require('uuid-js'),
+  jwt = require('jsonwebtoken'),
+  twitterAPI = require('node-twitter-api');
+
+
+module.exports = function () {
+
     var m = {};
     var table = r.db(process.env.RETHINK_DB).table("logs");
+
+    var twitter = new twitterAPI({
+        consumerKey: process.env.TWITTER_KEY,
+        consumerSecret: process.env.TWITTER_SECRET,
+        callback: process.env.TWITTER_CALLBACK
+    });
 
 //----------------------------- MAKE ID
     m.makeID = function () {
@@ -17,12 +29,12 @@ module.exports = function (r, uuid, twitter, jwt) {
     };
 
 //----------------------------- MAKE TOKEN
-    m.makeToken = function (userID, userType, url) {
+    m.makeJWT = function (userID, userType, url) {
         return jwt.sign({ user_type: userType, user_id: userID, iss: process.env.WEB_SITE }, process.env.AUTH_SECRET);
     };
 
 //----------------------------- READ TOKEN
-    m.readToken = function (authToken) {
+    m.readJWT = function (authToken) {
         try {
             var token = jwt.verify(authToken, process.env.AUTH_SECRET);
             return { type: token.user_type, user_id: token.user_id };
@@ -31,9 +43,9 @@ module.exports = function (r, uuid, twitter, jwt) {
             return { type: 'INVALID'};
         }
     };
-    
+
 //----------------------------- MAKE TWITTER REQUEST TOKEN
-    m.makeTwitterRequestToken = function (callback) {
+    m.makeTwitterRequest = function (callback) {
         twitter.getRequestToken(function (error, requestToken, requestTokenSecret, results) {
             if (error) {
                 console.log("Error getting OAuth request token : " + error);
@@ -45,7 +57,7 @@ module.exports = function (r, uuid, twitter, jwt) {
     };
 
 //----------------------------- MAKE TWITTER ACESS TOKEN
-    m.makeTwitterAccessToken = function (token_secret, request_token, oauth_verifier, callback) {       
+    m.makeTwitterAccess = function (token_secret, request_token, oauth_verifier, callback) {
         twitter.getAccessToken(request_token, token_secret, oauth_verifier, function (error, accessToken, accessTokenSecret, results) {
             if (error) {
                 console.log(error);
@@ -56,14 +68,14 @@ module.exports = function (r, uuid, twitter, jwt) {
     };
 
 //----------------------------- TWITTER VERIFY TOKEN
-    m.verifyTwitterAccessToken = function (accessToken, accessTokenSecret, callback) { 
+    m.verifyTwitterAccess = function (accessToken, accessTokenSecret, callback) {
         twitter.verifyCredentials(accessToken, accessTokenSecret, function (error, data, response) {
             if (error) {
                 callback(error);
             } else {
                 callback(data);
             }
-        });        
+        });
     };
 
 //----------------------------- END

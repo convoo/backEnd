@@ -9,20 +9,20 @@ module.exports = function (io, r) {
 
     var sockets = require('./controllers.js')(r);
 
-    //-- AUTH CONNECT & DISCONNECT     
+    //-- AUTH CONNECT & DISCONNECT
     io.on('connection', function (socket, msg) {
 
 
         socket.on('jwt', function (msg) {
-            sockets.jwt(socket, io, msg);
+            sockets.auth.jwt(socket, io, msg);
         });
-        
+
         socket.on('twitterRequestToken', function (msg) {
-            sockets.twitterRequestToken(socket, io, msg);
+            sockets.auth.twitterRequestToken(socket, io, msg);
         });
 
         socket.on('disconnect', function () {
-            sockets.disconnect(socket, r);
+            sockets.auth.disconnect(socket, r);
         });
 
         socket.on('latency', function (startTime, callBack) {
@@ -30,23 +30,23 @@ module.exports = function (io, r) {
         });
 
         socket.on('editProfile', function (msg) {
-            sockets.editProfile(socket, msg);
+            sockets.user.editProfile(socket, msg);
         });
-        
+
         socket.on('getProfile', function (msg) {
-            sockets.getProfile(socket, io, msg);
+            sockets.user.getProfile(socket, io, msg);
             console.log(socket.id);
         });
-        
-        socket.on('addRoom', function (msg) {  
-            sockets.addRoom(msg);
-        });
-        
-        
-        
-        
 
-// TODO: Make this changefeed work 
+        socket.on('addRoom', function (msg) {
+            sockets.room.add(msg);
+        });
+
+
+
+
+
+// TODO: Make this changefeed work
         socket.on('onlineUsers', function (callBack) {
             sockets.onlineUsers(socket,io, r);
         });

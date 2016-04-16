@@ -7,17 +7,18 @@
 
 var _ = require("underscore");
 
-module.exports = function (r) {
+module.exports = function () {
     (function () {
+        var r = require("rethinkdb");
 
 //-- MAKE DATABASE
         var createDB = r.dbCreate(process.env.RETHINK_DB),
             useDB = r.db(process.env.RETHINK_DB),
             allTables = ["users", "logs", "rooms"];
-        
+
         // Connect
         var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
-        
+
         c.then(function(conn){
             r.dbList().run(conn)
                 .then(function(allDBs){
