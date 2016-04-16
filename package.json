@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test:local": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive"
   },
   "author": "",
   "license": "ISC",
