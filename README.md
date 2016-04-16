@@ -5,3 +5,7 @@
 #Convoo Backend
 
 This is the backend API and Websocket implementation for the Convoo app.
+
+## Convoo Activity (includes [frontEnd](https://github.com/convoo/frontEnd))
+
+[![Throughput Graph](https://graphs.waffle.io/convoo/frontEnd/throughput.svg)](https://waffle.io/convoo/frontEnd/metrics)
