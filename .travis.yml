@@ -1,6 +1,9 @@
 language: node_js
 node_js:
 - '5'
+before_script:
+  - npm i -g firebase-tools@2.2.0 apidoc
+  - chmod a+x ./travis-runner.sh
 script:
   - ./travis-runner.sh
 notifications:
