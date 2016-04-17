@@ -14,10 +14,15 @@ module.exports = function (app) {
     app.route('/auth/twitter/')             .get(api.auth.twitter);              //Make Twitter Request Token
     app.route('/auth/twitter/callback/')    .get(api.auth.twitterCallback);      //Handle callback from Twitter
     app.route('/auth/logout/')              .get(api.auth.logout);
+
 //---USERS
-    app.route('/user/:userID/delete')      .get(api.user.del);
-    app.route('/user/:userID/profile')     .get(api.user.profile);
-    app.route('/user/:userID/logs')        .get(api.user.logs);
+    app.route('/user/:userID/delete')       .get(api.user.del);
+    app.route('/user/:userID/profile')      .get(api.user.profile);
+    app.route('/user/:userID/logs')         .get(api.user.logs);
+
+//---FETCHING
+    app.route('/fetch')                     .get(api.fetch.url);
+
 //---CATCH ALL
     app.route('/*').get(function (req, res) {
         res.sendStatus(404);

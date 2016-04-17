@@ -6,7 +6,8 @@
 'use strict';
 
 var user = require('./user.js'),
-  auth = require('./auth.js');
+    auth = require('./auth.js'),
+    fetch = require('./fetch.js');
 
 exports.index = function(req, res){
         res.json({
@@ -14,9 +15,6 @@ exports.index = function(req, res){
         })
     }
 
-exports.user = user
-exports.auth = auth
-
-
-
-
+exports.user = user;
+exports.auth = auth;
+exports.fetch = fetch;
