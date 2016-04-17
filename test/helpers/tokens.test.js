@@ -78,7 +78,7 @@ describe('Token Helper', function() {
       token.makeTwitterRequest(function(redirectUrl, requestToken, requestTokenSecret, err){
         should.not.exist(err);
         should.exist(redirectUrl);
-        redirectUrl.should.be.a('string');
+        redirectUrl.should.be.a.String();
         done();
       });
     });
@@ -87,7 +87,7 @@ describe('Token Helper', function() {
       token.makeTwitterRequest(function(redirectUrl, requestToken, requestTokenSecret, err){
         should.not.exist(err);
         should.exist(requestToken);
-        requestToken.should.be.a('string');
+        requestToken.should.be.a.String();
         done();
       });
     });
@@ -96,7 +96,7 @@ describe('Token Helper', function() {
       token.makeTwitterRequest(function(redirectUrl, requestToken, requestTokenSecret, err){
         should.not.exist(err);
         should.exist(requestTokenSecret);
-        requestTokenSecret.should.be.a('string');
+        requestTokenSecret.should.be.a.String();
         done();
       });
     });
