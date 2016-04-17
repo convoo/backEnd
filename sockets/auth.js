@@ -29,9 +29,11 @@ exports.jwt = function (socket, io, msg) {
 
 exports.twitterRequestToken = function (socket, io, msg) {
         console.log('Making Twittr Request Token');
-        token.makeTwitterRequest(function (redirectUrl, requestToken, requestTokenSecret) {
-          console.log('Sending Twittr Request Token');
-          io.to(socket.id).emit('twitterRequestToken', {redirectUrl:redirectUrl, requestToken: requestToken, requestTokenSecret: requestTokenSecret});
+        token.makeTwitterRequest(function (redirectUrl, requestToken, requestTokenSecret, err) {
+            if (!err) {
+                console.log('Sending Twittr Request Token');
+                io.to(socket.id).emit('twitterRequestToken', {redirectUrl:redirectUrl, requestToken: requestToken, requestTokenSecret: requestTokenSecret});
+            }
         })
     };
 

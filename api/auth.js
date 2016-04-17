@@ -16,9 +16,11 @@ exports.token = function (req, res) {
 
 //----------------------------- MAKE TWITTER REQUEST TOKEN
 exports.twitter = function (req, res) {
-    token.makeTwitterRequest(function (redirectUrl, requestToken, requestTokenSecret) {
-        res.cookie('twitterToken', {requestToken: requestToken, requestTokenSecret: requestTokenSecret}, { expires: new Date(Date.now() + 9000000), httpOnly: true });
-        res.redirect(redirectUrl);
+    token.makeTwitterRequest(function (redirectUrl, requestToken, requestTokenSecret, err) {
+        if (!err) {
+            res.cookie('twitterToken', {requestToken: requestToken, requestTokenSecret: requestTokenSecret}, { expires: new Date(Date.now() + 9000000), httpOnly: true });
+            res.redirect(redirectUrl);
+        }
     })
 };
 
