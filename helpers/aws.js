@@ -3,19 +3,17 @@
 /* global console */
 /* global module */
 
-// TODO: Figure out cloud front 
+// TODO: Figure out cloud front
 
 ///////////////----------------------------- AWS
- 
+
 'use strict';
 
-module.exports = function (r, aws) {
-    var m = {};
-    var table = r.db(process.env.RETHINK_DB).table("logs");
+var aws = require('aws-sdk');
 
-   
 //----------------------------- BASE64 to S3
-    m.s3PutBase64 = function (image, folder, imageName) {
+exports.s3PutBase64 = function (image, folder, imageName) {
+      return new Promise(function(resolve, reject) {
 
         var buf = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
         var s3 = new aws.S3();
@@ -31,9 +29,18 @@ module.exports = function (r, aws) {
             ContentEncoding: "base64"
 
         }, function (error, data) {
-        // TODO: LOG THIS
+            if (error){
+                reject(error);
+            } else {
+                resolve(data);
+            }
         });
-    };
+        
+        
+      });
+    }
+    
+    
+
+    
 //----------------------------- END
-    return m;
-};
