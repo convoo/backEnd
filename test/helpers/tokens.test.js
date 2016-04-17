@@ -1,5 +1,5 @@
-
-var should = require('chai').should();
+'use strict';
+var should = require('should');
 
 describe('Token Helper', function() {
 
@@ -12,7 +12,7 @@ describe('Token Helper', function() {
       id.should.not.equal(null);
     });
     it('should be a string',function(){
-      id.should.be.a('string');
+      id.should.be.a.String();
     });
     it('should be 36 characters long',function(){
       id.length.should.equal(36);
@@ -32,7 +32,7 @@ describe('Token Helper', function() {
         jwt.should.not.equal(null);
       });
       it('should be a string',function(){
-        jwt.should.be.a('string');
+        jwt.should.be.a.String();
       });
       it('should have 3 periods', function(){
         jwt.split('.').length.should.equal(3);
@@ -55,8 +55,8 @@ describe('Token Helper', function() {
     var invalidJWT = 'not.a.valid.jwt.token';
 
     it('should return an object for valid and invalid tokens', function(){
-      token.readJWT(validJWT).should.be.an('object');
-      token.readJWT(invalidJWT).should.be.an('object');
+      token.readJWT(validJWT).should.be.an.Object();
+      token.readJWT(invalidJWT).should.be.an.Object();
     });
 
     it('should have type INVALID for invalid tokens', function () {

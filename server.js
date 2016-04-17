@@ -35,7 +35,7 @@ require('./api/routes.js')(app);
 
 //--START SERVER
 server.listen(process.env.WEB_PORT, function () {
-    console.info('Command + Double Click http://www.website.com:' + process.env.WEB_PORT);
+    // console.info('Command + Double Click http://www.website.com:' + process.env.WEB_PORT);
 });
 
-
+module.exports = server;
