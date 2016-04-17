@@ -9,6 +9,11 @@ var socketsUrl = ('http://localhost:'+process.env.WEB_PORT);
 describe('Auth Sockets', function () {
     var auth = require('../../sockets/auth');
 
+    var server;
+
+    before(function () {
+        var io = require('../../server.js').io;
+    });
 
     describe('JWT tokens', function () {
 

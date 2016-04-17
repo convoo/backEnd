@@ -6,7 +6,7 @@ describe('1 - Main', function () {
     var server;
 
     before(function () {
-        server = require('../../server.js');
+        server = require('../../server.js').server;
     })
     after(function () {
         server.close();

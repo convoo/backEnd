@@ -23,7 +23,7 @@ app.use(express.static('public'));
 require('./setupRethink.js');
 
 //--SOCKETS
-require('./sockets/events.js')(io);
+exports.io = require('./sockets/events.js')(io);
 
 //--API
 var bodyParser = require('body-parser'),
@@ -38,4 +38,4 @@ server.listen(process.env.WEB_PORT, function () {
     // console.info('Command + Double Click http://www.website.com:' + process.env.WEB_PORT);
 });
 
-module.exports = server;
+exports.server = server;
