@@ -42,10 +42,12 @@ exports.readJWT = function (authToken) {
 exports.makeTwitterRequest = function (callback) {
         twitter.getRequestToken(function (error, requestToken, requestTokenSecret, results) {
             if (error) {
-                console.log("Error getting OAuth request token : " + error);
+                // console.log("Error getting OAuth request token : " + error);
+                // console.log(error);
+                callback(redirectUrl, requestToken, requestTokenSecret,error);
             } else {
                 var redirectUrl = twitter.getAuthUrl(requestToken)
-                callback(redirectUrl, requestToken, requestTokenSecret);
+                callback(redirectUrl, requestToken, requestTokenSecret,error);
             }
         });
     };

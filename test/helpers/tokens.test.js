@@ -74,24 +74,30 @@ describe('Token Helper', function() {
   describe('#makeTwitterRequest()', function () {
     require('dotenv').config();
 
-    it('should return a redirect URL that is a string', function () {
-      token.makeTwitterRequest(function(redirectUrl, requestToken, requestTokenSecret){
+    it('should return a redirect URL that is a string', function (done) {
+      token.makeTwitterRequest(function(redirectUrl, requestToken, requestTokenSecret, err){
+        should.not.exist(err);
         redirectUrl.should.not.be(null);
         redirectUrl.should.be.a('string');
+        done();
       });
     });
 
-    it('should return a request token that is a string', function () {
-      token.makeTwitterRequest(function(redirectUrl, requestToken, requestTokenSecret){
+    it('should return a request token that is a string', function (done) {
+      token.makeTwitterRequest(function(redirectUrl, requestToken, requestTokenSecret, err){
+        should.not.exist(err);
         requestToken.should.not.be(null);
         requestToken.should.be.a('string');
+        done();
       });
     });
 
-    it('should return a request token secret that is a string', function () {
-      token.makeTwitterRequest(function(redirectUrl, requestToken, requestTokenSecret){
+    it('should return a request token secret that is a string', function (done) {
+      token.makeTwitterRequest(function(redirectUrl, requestToken, requestTokenSecret, err){
+        should.not.exist(err);
         requestTokenSecret.should.not.be(null);
         requestTokenSecret.should.be.a('string');
+        done();
       });
     });
   });

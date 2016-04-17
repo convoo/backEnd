@@ -18,7 +18,8 @@ exports.jwt = function (socket, io, msg) {
             var newUserID = token.makeID();
             console.log(newUserID);
             var token = token.makeJWT(newUserID, "visitor", process.env.WEB_SITE);
-            user.add('visitor', newUserID, socket.id, '/');
+            user.add('visitor', newUserID, socket.id);
+            //TO DO: add log
             io.to(socket.id).emit('jwt', {token:token});
 
             }
