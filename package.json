@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "test": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive | tee mocha.log && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "start": "nodemon server.js",
     "test:local": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive",
     "apidoc": "apidoc -i api/ -o apidoc/"

@@ -1,4 +1,7 @@
 npm test
+if grep -q " failing" mocha.log; then
+   exit 1
+fi
 if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ]
 then
     # API Docs Setup & Deploying
