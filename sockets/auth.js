@@ -11,7 +11,7 @@ exports.jwt = function (socket, io, msg) {
             console.log('You sent me a token');
             var userID = token.readJWT(msg.jwt).user_id;
             user.seen(userID, socket.id, '/');
-
+            io.to(socket.id).emit('jwt', {seen: "Seen!"});
             } else {
 
             console.log('You did not sent me a token');

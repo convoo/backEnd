@@ -3,7 +3,7 @@
 var should = require('should');
 var request = require('supertest');
 
-describe('Authentication', function () {
+describe('Authentication API', function () {
     var server;
 
     before(function () {
