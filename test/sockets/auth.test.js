@@ -7,22 +7,28 @@ var sockets = require('socket.io-client');
 var socketsUrl = ('http://localhost:'+process.env.WEB_PORT);
 var options = {
     transports: ['websocket'],
-    'force new connection': true
+    'force new connection': true,
+    reconnect: true
 };
 
-describe('Auth Sockets', function () {
+describe('Authentication Sockets', function () {
     var auth = require('../../sockets/auth');
 
     var server;
 
     before(function () {
         var io = require('../../server.js').io;
+        server = require('../../server.js').server;
+    });
+
+    after(function(){
+        server.close();
     });
 
     describe('JWT tokens', function () {
 
         it('should respond with seen if the user sends a token', function (done) {
-            var client = sockets(socketsUrl, options);
+            var client = sockets.connect(socketsUrl, options);
             client.emit('jwt', {
                 jwt: token.makeJWT(token.makeID(), 'guest', '/')
             });
@@ -34,7 +40,7 @@ describe('Auth Sockets', function () {
         });
 
         it("should respond with a token if the user doesn't send one", function (done) {
-            var client = sockets(socketsUrl);
+            var client = sockets.connect(socketsUrl, options);
             client.emit('jwt');
             client.on('jwt', function(data){
                 should.exist(data.token);
