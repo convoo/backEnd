@@ -16,8 +16,8 @@ describe('AWS Helper', function(){
             awsHelper.s3PutBase64(image, folder, imageName)
             .then(function(data) {
                 data.ETag.should.not.be.null;
-                done()
             });
+            done();
        });
 
 
@@ -29,8 +29,8 @@ describe('AWS Helper', function(){
             awsHelper.s3PutBase64(image, folder, imageName)
             .then(function(data) {
                 data.ETag.length.should.equal(34);
-                done()
             });
+            done();
        });
 
 
