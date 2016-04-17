@@ -52,7 +52,7 @@ describe('Token Helper', function() {
     var userType = 'guest';
     var url = 'website.com';
     var validJWT = token.makeJWT(id, userType, url);
-    var invalidJWT = 'asdhoashl/asdashodaslhas.ahos';
+    var invalidJWT = 'not.a.valid.jwt.token';
 
     it('should return an object for valid and invalid tokens', function(){
       token.readJWT(validJWT).should.be.an('object');

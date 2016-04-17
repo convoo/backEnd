@@ -13,6 +13,7 @@ var aws = require('aws-sdk');
 
 //----------------------------- BASE64 to S3
 exports.s3PutBase64 = function (image, folder, imageName) {
+      return new Promise(function(resolve, reject) {
 
         var buf = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
         var s3 = new aws.S3();
@@ -28,7 +29,18 @@ exports.s3PutBase64 = function (image, folder, imageName) {
             ContentEncoding: "base64"
 
         }, function (error, data) {
-        // TODO: LOG THIS
+            if (error){
+                reject(error);
+            } else {
+                resolve(data);
+            }
         });
-    };
+        
+        
+      });
+    }
+    
+    
+
+    
 //----------------------------- END
