@@ -2,7 +2,7 @@
 
 var request = require('supertest');
 
-describe('1 - Main', function () {
+describe('Main API', function () {
     var server;
 
     before(function () {

@@ -10,8 +10,9 @@ module.exports = function (io) {
     var sockets = require('./controllers.js');
 
     //-- AUTH CONNECT & DISCONNECT
-    io.on('connection', function (socket, msg) {
+    io.on('connect', function (socket, msg) {
 
+        socket.emit('hello', {message: "Hello from Convoo!"})
 
         socket.on('jwt', function (msg) {
             sockets.auth.jwt(socket, io, msg);
