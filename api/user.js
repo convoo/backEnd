@@ -17,7 +17,16 @@ exports.profile = function (req, res) {
         user.edit(token.readJWT(req.body.authToken).user_id, req.body.photo, req.body.twitterID, Date.now());
         res.sendStatus(200).json({ Updated: 'true' });
     };
-
+/**
+ * @api {get} /user/:id/logs Request all logs by a user
+ * @apiName getUserLogs
+ * @apiGroup User
+ * @apiPermission Admin
+ * 
+ * @apiSuccess {Array} logs An array of log objects associated with the user
+ * @apiError UserNotFound The id of the User was not found.
+ * 
+ */
 exports.logs = function (req, res) {
         log.add('Get Logs', token.readJWT(req.body.authToken).user_id, Date.now(), '/user/' + req.params.userID + '/logs/');
         res.sendStatus(200).json('log');
