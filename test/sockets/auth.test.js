@@ -5,6 +5,10 @@ var should = require('should');
 var token = require('../../helpers/token');
 var sockets = require('socket.io-client');
 var socketsUrl = ('http://localhost:'+process.env.WEB_PORT);
+var options = {
+    transports: ['websocket'],
+    'force new connection': true
+};
 
 describe('Auth Sockets', function () {
     var auth = require('../../sockets/auth');
@@ -18,7 +22,7 @@ describe('Auth Sockets', function () {
     describe('JWT tokens', function () {
 
         it('should respond with seen if the user sends a token', function (done) {
-            var client = sockets(socketsUrl);
+            var client = sockets(socketsUrl, options);
             client.emit('jwt', {
                 jwt: token.makeJWT(token.makeID(), 'guest', '/')
             });
