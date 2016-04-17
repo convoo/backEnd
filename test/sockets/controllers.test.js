@@ -10,6 +10,16 @@ var options = {
 
 describe('Main Sockets', function () {
 
+    var server;
+
+    before(function () {
+        server = require('../../server.js').server;
+    });
+
+    after(function(){
+        server.close();
+    });
+
     it('should be able to connect', function (done) {
         var client = sockets.connect(socketsUrl, options);
             client.on('connect', function(){

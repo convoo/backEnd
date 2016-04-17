@@ -17,7 +17,6 @@ describe('Authentication Sockets', function () {
     var server;
 
     before(function () {
-        var io = require('../../server.js').io;
         server = require('../../server.js').server;
     });
 

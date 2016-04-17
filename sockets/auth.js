@@ -5,25 +5,21 @@ var user = require('../models/user.js');
 
   //----------------------------- ON CONNECTOIN
 exports.jwt = function (socket, io, msg) {
-
-
-            if(msg.jwt){
-            console.log('You sent me a token');
-            var userID = token.readJWT(msg.jwt).user_id;
-            user.seen(userID, socket.id, '/');
-            io.to(socket.id).emit('jwt', {seen: "Seen!"});
-            } else {
-
-            console.log('You did not sent me a token');
-            var newUserID = token.makeID();
-            console.log(newUserID);
-            var token = token.makeJWT(newUserID, "visitor", process.env.WEB_SITE);
-            user.add('visitor', newUserID, socket.id);
-            //TO DO: add log
-            io.to(socket.id).emit('jwt', {token:token});
-
-            }
-    };
+    if(msg.jwt != undefined){
+        console.log('You sent me a token');
+        var userID = token.readJWT(msg.jwt).user_id;
+        user.seen(userID, socket.id, '/');
+        io.to(socket.id).emit('jwt', {seen: "Seen!"});
+    } else {
+        console.log('You did not send me a token');
+        var newUserID = token.makeID();
+        console.log(newUserID);
+        var t = token.makeJWT(newUserID, "visitor", process.env.WEB_SITE);
+        user.add('visitor', newUserID, socket.id);
+        //TO DO: add log
+        io.to(socket.id).emit('jwt', {token:t});
+    }
+};
 
 //----------------------------- TWITTER REQUEST TOKEN
 
