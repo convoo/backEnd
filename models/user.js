@@ -223,7 +223,7 @@ exports.forceDelete = function (userID) {
             })
             // Close the connection
             .then(function(result){
-                console.log(result);
+                // console.log(result);
                 conn.close();
                 return result;
             });
