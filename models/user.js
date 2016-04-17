@@ -50,7 +50,6 @@ exports.add = function (userType, userID, socketID) {
             })
             // Close the connection
             .then(function(result){
-                // console.log("Result: ",result);
                 conn.close();
                 return result;
             });
@@ -223,7 +222,6 @@ exports.forceDelete = function (userID) {
             })
             // Close the connection
             .then(function(result){
-                // console.log(result);
                 conn.close();
                 return result;
             });
@@ -324,7 +322,6 @@ exports.get = function (userID) {
                     console.log(err);
                 })
                 .then(function(result){
-                    console.log(result);
                     conn.close();
                     return result;
                 })
