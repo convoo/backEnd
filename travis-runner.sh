@@ -1,4 +1,3 @@
-npm start
 npm test
 # npm run test:local
 if grep -q " failing" mocha.log; then
