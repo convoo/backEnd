@@ -7,6 +7,7 @@
     "test": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive | tee mocha.log && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "start": "nodemon server.js",
     "test:local": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive",
+    "test:s": "mocha",
     "apidoc": "apidoc -i api/ -o apidoc/"
   },
   "author": "",
