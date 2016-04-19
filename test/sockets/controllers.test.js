@@ -7,17 +7,13 @@ var socketsUrl = ('http://localhost:'+process.env.WEB_PORT);
 var options = {
     reconnect: true
 };
+var server = require('../../server.js').server;
 
 describe('Main Sockets', function () {
 
-    var server;
-
-    before(function () {
-        server = require('../../server.js').server;
-    });
-
-    after(function(){
+    after(function(done){
         server.close();
+        done();
     });
 
     it('should be able to connect', function (done) {

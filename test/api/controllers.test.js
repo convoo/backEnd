@@ -1,15 +1,13 @@
 'use strict';
 
 var request = require('supertest');
+var server = require('../../server.js').server;
 
 describe('Main API', function () {
-    var server;
 
-    before(function () {
-        server = require('../../server.js').server;
-    })
-    after(function () {
+    after(function (done) {
         server.close();
+        done();
     })
 
     describe('Index', function () {

@@ -10,18 +10,13 @@ var options = {
     'force new connection': true,
     reconnect: true
 };
+var server = require('../../server.js').server;
 
 describe('Authentication Sockets', function () {
-    var auth = require('../../sockets/auth');
 
-    var server;
-
-    before(function () {
-        server = require('../../server.js').server;
-    });
-
-    after(function(){
+    after(function(done){
         server.close();
+        done();
     });
 
     describe('JWT tokens', function () {
