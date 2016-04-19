@@ -2,12 +2,17 @@
 
 var should = require('should');
 var request = require('supertest');
-var server = require('../../server.js').server;
 
 describe('Authentication API', function () {
-    after(function (done) {
-        server.close();
-        done()
+    var server;
+
+    beforeEach(function(){
+         delete require.cache[require.resolve('../../server.js')];
+         server = require('../../server.js').server;
+    });
+
+    afterEach(function(done){
+        server.close(done);
     });
 
     describe('JWT Token', function () {
