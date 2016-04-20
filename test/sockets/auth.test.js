@@ -11,7 +11,7 @@ var options = {
     reconnect: true
 };
 
-describe('Authentication Sockets', function () {
+describe('Authentication Sockets', function (done) {
     var server;
 
     beforeEach(function(){
@@ -20,10 +20,12 @@ describe('Authentication Sockets', function () {
     });
 
     afterEach(function(done){
-        this.server.close(done);
+        this.server.close();
+          done();
     });
 
     describe('JWT tokens', function () {
+
 
         it('should respond with seen if the user sends a token', function (done) {
             var client = sockets.connect(socketsUrl, options);
@@ -48,5 +50,7 @@ describe('Authentication Sockets', function () {
         });
 
     });
+
+
 
 });
