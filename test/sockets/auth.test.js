@@ -11,16 +11,16 @@ var options = {
     reconnect: true
 };
 
-describe('Authentication Sockets', function (done) {
+describe('Authentication Sockets', function () {
     var server;
 
     beforeEach(function(){
          delete require.cache[require.resolve('../../server.js')];
-         this.server = require('../../server.js').server;
+         server = require('../../server.js').server;
     });
 
     afterEach(function(done){
-        this.server.close();
+        server.close();
           done();
     });
 

@@ -17,7 +17,8 @@ describe('Main Sockets', function () {
     });
 
     afterEach(function(done){
-        server.close(done);
+        server.close();
+        done();
     });
 
     it('should be able to connect', function (done) {
