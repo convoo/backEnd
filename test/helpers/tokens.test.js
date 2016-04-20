@@ -1,5 +1,6 @@
 'use strict';
 var should = require('should');
+require('dotenv').config();
 
 describe('Token Helper', function() {
 
