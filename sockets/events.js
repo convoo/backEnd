@@ -15,7 +15,6 @@ module.exports = function (io) {
         socket.emit('hello', {message: "Hello from Convoo!"})
 
         socket.on('jwt', function (msg) {
-            console.log(sockets);
             sockets.auth.jwt(socket, io, msg);
         });
 
