@@ -29,13 +29,13 @@ var log = require('./log.js');
 var table = r.db(process.env.RETHINK_DB).table("users");
 
 //----------------------------- ADD USER
-exports.add = function (userType, userID, socketID, url) {
+exports.add = function (userType, userID, socketID) {
 
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
-        c.then(function(conn){
+        return c.then(function(conn){
             // Insert user
-            table.insert({
+            return table.insert({
                 id: userID,
                 user_type: userType,
                 socket_id: socketID,
@@ -46,16 +46,14 @@ exports.add = function (userType, userID, socketID, url) {
             .run(conn)
             // Catch any errors
             .catch(function(err){
-                console.log(err);
+                console.log("Error: ", err);
             })
             // Close the connection
-            .finally(function(){
+            .then(function(result){
                 conn.close();
+                return result;
             });
         });
-
-        // make log
-        log.add('New ' + userType +'!', userID, url);
     };
 
  //----------------------------- SEEN USER
@@ -204,9 +202,30 @@ exports.del = function (userID) {
                 conn.close();
             });
         });
+    };
 
-        // make log
-        log.add('Delete User ' + userID, userID, "/");
+exports.forceDelete = function (userID) {
+        // connect
+        var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
+
+        return c.then(function(conn){
+            // Insert user
+            return table.get(userID)
+            .delete({
+                durability: "hard",
+                returnChanges: true
+            })
+            .run(conn)
+            // Catch any errors
+            .catch(function(err){
+                console.log(err);
+            })
+            // Close the connection
+            .then(function(result){
+                conn.close();
+                return result;
+            });
+        });
     };
 
 //----------------------------- MAKE USER ADMIN
@@ -297,7 +316,15 @@ exports.get = function (userID) {
         var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
         return c.then(function (conn) {
             return table.get(userID)
-                .run(conn);
+                .run(conn)
+                // Catch any errors
+                .catch(function(err){
+                    console.log(err);
+                })
+                .then(function(result){
+                    conn.close();
+                    return result;
+                })
         });
     };
 

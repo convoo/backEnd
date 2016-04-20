@@ -8,3 +8,4 @@ rethinkdb_data
 .coveralls.yml
 coverage
 apidoc
+mocha.log

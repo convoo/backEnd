@@ -4,9 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "test": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive | tee mocha.log && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "start": "nodemon server.js",
     "test:local": "./node_modules/.bin/istanbul cover --report lcov _mocha -- --recursive",
+    "test:s": "mocha",
     "apidoc": "apidoc -i api/ -o apidoc/"
   },
   "author": "",
@@ -23,20 +24,23 @@
     "jsonwebtoken": "^5.7.0",
     "node-fetch": "^1.5.1",
     "node-twitter-api": "^1.7.0",
-    "rethinkdb": "^2.2.2",
+    "rethinkdb": "~2.2.2",
     "socket.io": "^1.4.5",
     "underscore": "^1.8.3",
     "uuid-js": "^0.7.5"
   },
   "devDependencies": {
-    "nodemon": "^1.9.1",
     "coveralls": "^2.11.9",
     "istanbul": "^1.0.0-alpha.2",
     "mocha": "^2.4.5",
-    "mocha-lcov-reporter": "^1.2.0"
+    "mocha-lcov-reporter": "^1.2.0",
+    "nodemon": "^1.9.1",
+    "should": "^8.3.1",
+    "socket.io-client": "^1.4.5",
+    "supertest": "^1.2.0"
   },
-  "apidoc":{
+  "apidoc": {
     "title": "Convoo API",
-    "url" : "https://api.website.com"
+    "url": "https://api.website.com"
   }
 }

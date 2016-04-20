@@ -7,11 +7,12 @@
 
 module.exports = function (io) {
 
-    var sockets = require('./controllers.js');
-
     //-- AUTH CONNECT & DISCONNECT
-    io.on('connection', function (socket, msg) {
+    io.on('connect', function (socket, msg) {
 
+        var sockets = require('./controllers');
+
+        socket.emit('hello', {message: "Hello from Convoo!"})
 
         socket.on('jwt', function (msg) {
             sockets.auth.jwt(socket, io, msg);
@@ -22,7 +23,7 @@ module.exports = function (io) {
         });
 
         socket.on('disconnect', function () {
-            sockets.auth.disconnect(socket, r);
+            sockets.auth.disconnect(socket);
         });
 
         socket.on('latency', function (startTime, callBack) {

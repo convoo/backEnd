@@ -16,9 +16,11 @@ exports.token = function (req, res) {
 
 //----------------------------- MAKE TWITTER REQUEST TOKEN
 exports.twitter = function (req, res) {
-    token.makeTwitterRequest(function (redirectUrl, requestToken, requestTokenSecret) {
-        res.cookie('twitterToken', {requestToken: requestToken, requestTokenSecret: requestTokenSecret}, { expires: new Date(Date.now() + 9000000), httpOnly: true });
-        res.redirect(redirectUrl);
+    token.makeTwitterRequest(function (redirectUrl, requestToken, requestTokenSecret, err) {
+        if (!err) {
+            res.cookie('twitterToken', {requestToken: requestToken, requestTokenSecret: requestTokenSecret}, { expires: new Date(Date.now() + 9000000), httpOnly: true });
+            res.redirect(redirectUrl);
+        }
     })
 };
 
@@ -29,10 +31,10 @@ exports.twitterCallback = function (req, res) {
     token.makeTwitterAccess(t.requestTokenSecret, t.requestToken, req.query.oauth_verifier, function (accessToken, accessTokenSecret) {
         token.verifyTwitterAccess(accessToken, accessTokenSecret, function (twitterDetails) {
           // TODO:  possibly change the users JWT cookie
-                res.redirect('/');
             user.twitterDetails(userID, accessToken, accessTokenSecret, twitterDetails)
         });
         res.cookie('twitterToken', {}, { expires: new Date(Date.now() - 9000000), httpOnly: true });
+        res.redirect('/');
     })
 };
 
