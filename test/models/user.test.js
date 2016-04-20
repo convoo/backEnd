@@ -13,7 +13,7 @@ describe('User Model', function () {
 
     // Tests several functions at once
     // TODO: Figure out how to separate and test in unit tests
-    it('should add, get and force delete a user', function (done) {
+    it('should add, get and force delete a user', function () {
         User.add('Guest', userID, socketID)
         .then(function(result){
             return User.get(userID);
@@ -27,9 +27,6 @@ describe('User Model', function () {
             return User.get(userID);
         }).then(function(result){
             should.not.exist(result);
-        })
-        .then(function(){
-            done();
         });
     });
 });
