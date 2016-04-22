@@ -128,26 +128,30 @@ exports.disconnect = function (socketID) {
 
 
 exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitterDetails) {
-
-        var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
-        c.then(function (conn) {
-            // Insert user
-            table.update({
-
+    console.log("got here");
+    console.log(userID);
+    var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
+    return c.then(function (conn) {
+        return table.get(userID)
+            .update({
+                user_name: twitterDetails.screen_name,
+                name: twitterDetails.name,
+                bio: twitterDetails.description,
+                location: twitterDetails.location
             })
-                .run(conn)
-            // Catch any errors
-                .catch(function (err) {
-                    console.log(err);
-                })
-            // Close the connection
-                .finally(function () {
-                    conn.close();
-                });
-        });
-
+            .run(conn)
+        // Catch any errors
+            .catch(function (err) {
+                console.log(err);
+            })
+        // Close the connection
+            .finally(function (result) {
+                conn.close();
+                console.log(result);
+            });
+    });
         // make log
-  log.add('Upgrade visitor to user ', userID, "/");
+//   log.add('Upgrade visitor to user ', userID, "/");
 
     };
 

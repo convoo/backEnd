@@ -30,11 +30,15 @@ exports.twitterCallback = function (req, res) {
     var userID = token.readJWT(req.cookies.jwt).user_id;
     token.makeTwitterAccess(t.requestTokenSecret, t.requestToken, req.query.oauth_verifier, function (accessToken, accessTokenSecret) {
         token.verifyTwitterAccess(accessToken, accessTokenSecret, function (twitterDetails) {
+            // res.json(twitterDetails);
           // TODO:  possibly change the users JWT cookie
             user.twitterDetails(userID, accessToken, accessTokenSecret, twitterDetails)
+                .then(function(){
+                    res.cookie('twitterToken', {}, { expires: new Date(Date.now() - 9000000), httpOnly: true });
+                    res.redirect('/');
+                });
         });
-        res.cookie('twitterToken', {}, { expires: new Date(Date.now() - 9000000), httpOnly: true });
-        res.redirect('/');
+
     })
 };
 
