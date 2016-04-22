@@ -8,7 +8,7 @@ var options = {
     reconnect: true
 };
 
-describe('Main Sockets', function () {
+describe('Fetch Sockets', function () {
     var server;
 
     beforeEach(function(){
@@ -21,21 +21,17 @@ describe('Main Sockets', function () {
         done();
     });
 
-    it('should be able to connect', function (done) {
-        var client = sockets.connect(socketsUrl, options);
-        client.on('connect', function(){
-            done();
-        });
-    });
+    describe('URL', function () {
 
-
-    describe('Hello', function () {
-
-        it('should send a message on connection', function (done) {
+        it('should get an object with data in it including a title', function (done) {
             var client = sockets.connect(socketsUrl, options);
-            client.on('hello', function(data){
-                should.exist(data.message);
-                data.message.should.equal("Hello from Convoo!");
+            client.emit("fetchUrl", {
+                url: "https://google.com"
+            });
+
+            client.on('resFetchUrl', function(data){
+                should.exist(data);
+                should.exist(data.title);
                 done();
             });
         });

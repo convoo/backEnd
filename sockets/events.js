@@ -43,6 +43,9 @@ module.exports = function (io) {
             sockets.room.add(msg);
         });
 
+        socket.on('fetchUrl', function (msg) {
+            sockets.fetch.url(socket, io, msg);
+        });
 
 
 

@@ -5,11 +5,7 @@
 ///////////////----------------------------- CONTROLLERS
 'use strict';
 
-var auth = require('./auth.js');
-var user = require('./user.js');
-var room = require('./room.js');
-
-
-exports.auth = auth;
-exports.user = user;
-exports.room = room;
+exports.auth = require('./auth.js');
+exports.user = require('./user.js');
+exports.room = require('./room.js');
+exports.fetch = require('./fetch.js');
