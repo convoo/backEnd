@@ -138,8 +138,7 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                     .then(function(userArray){
                         if (userArray.length < 1) {
                             return {
-                                userID: userID,
-                                dateJoined: r.now()
+                                userID: userID
                             }
 
                         } else {
@@ -158,7 +157,7 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                                 profile_image: twitterDetails.profile_image_url_https,
                                 timezone: twitterDetails.time_zone,
                                 user_type: "User",
-                                joined_on: data.dateJoined
+                                joined_on: data.dateJoined ? data.dateJoined : r.now()
                             })
                             .run(conn)
                         // Catch any errors
