@@ -138,8 +138,10 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                     .then(function(userArray){
                         if (userArray.length < 1) {
                             var newUserID = userID;
+                            var dateJoined = r.now();
                         } else {
                             var newUserID = userArray[0].id;
+                            var dateJoined = userArray[0].joined_on;
                         }
                         return table.get(newUserID)
                             .update({
@@ -149,7 +151,8 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                                 location: twitterDetails.location,
                                 profile_image: twitterDetails.profile_image_url_https,
                                 timezone: twitterDetails.time_zone,
-                                user_type: "User"
+                                user_type: "User",
+                                joined_on: dateJoined
                             })
                             .run(conn)
                         // Catch any errors
@@ -159,7 +162,12 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                         // Close the connection
                             .then(function () {
                                 conn.close();
-                                return Token.makeJWT(userID, 'User', '/');
+                                return {
+                                    jwt:Token.makeJWT(userID, 'User', '/'),
+                                    username: twitterDetails.screen_name,
+                                    photo: twitterDetails.profile_image_url_https,
+                                    dateJoined: dateJoined
+                                }
                             });
                     });
             });

@@ -45,7 +45,7 @@ exports.twitterCallback = function (socket, io, msg) {
                     io.to(socket.id).emit('twitterCallback', {status: "Error", message: err});
                 })
                 .then(function(result){
-                    io.to(socket.id).emit('twitterCallback', {status: "Success", message: "User logged in", token:result});
+                    io.to(socket.id).emit('twitterCallback', {status: "Success", message: "User logged in", data:result});
                 });
         });
     });
