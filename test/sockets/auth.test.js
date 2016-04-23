@@ -27,14 +27,14 @@ describe('Authentication Sockets', function () {
     describe('#jwt', function () {
 
 
-        it('should respond with seen if the user sends a token', function (done) {
+        it('should respond with seen and token if the user sends a token', function (done) {
             var client = sockets.connect(socketsUrl, options);
             client.emit('jwt', {
                 jwt: token.makeJWT(token.makeID(), 'guest', '/')
             });
             client.on('jwt', function(data){
                 should.exist(data.seen);
-                should.not.exist(data.token);
+                should.exist(data.token);
                 done();
             });
         });

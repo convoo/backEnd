@@ -8,7 +8,7 @@ exports.jwt = function (socket, io, msg) {
     if(msg != undefined && msg.jwt != undefined){
         var userID = token.readJWT(msg.jwt).user_id;
         user.seen(userID, socket.id, '/');
-        io.to(socket.id).emit('jwt', {seen: "Seen!"});
+        io.to(socket.id).emit('jwt', {seen: "Seen!", token: msg.jwt});
     } else {
         var newUserID = token.makeID();
         var t = token.makeJWT(newUserID, "visitor", process.env.WEB_SITE);

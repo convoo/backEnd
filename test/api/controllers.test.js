@@ -11,8 +11,7 @@ describe('Main API', function () {
     });
 
     afterEach(function(done){
-        server.close();
-        done();
+        server.close(done);
     });
 
     describe('#index', function () {
