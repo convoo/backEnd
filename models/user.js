@@ -130,6 +130,7 @@ exports.disconnect = function (socketID) {
 
 exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitterDetails) {
     var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
+    var dateJoined;
     return c.then(function (conn) {
         return table.filter({user_name: twitterDetails.screen_name})
             .run(conn)
@@ -142,6 +143,7 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                             }
 
                         } else {
+                            dateJoined = userArray[0].joined_on;
                             return {
                                 userID: userArray[0].id,
                                 dateJoined: userArray[0].joined_on
@@ -157,7 +159,7 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                                 profile_image: twitterDetails.profile_image_url_https,
                                 timezone: twitterDetails.time_zone,
                                 user_type: "User",
-                                joined_on: data.dateJoined ? data.dateJoined : r.now()
+                                joined_on: data.hasOwnProperty(dateJoined) ? data.dateJoined : r.now()
                             })
                             .run(conn)
                         // Catch any errors
@@ -171,7 +173,7 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                                     jwt:Token.makeJWT(userID, 'User', '/'),
                                     username: twitterDetails.screen_name,
                                     photo: twitterDetails.profile_image_url_https,
-                                    dateJoined: dateJoined
+                                    dateJoined: dateJoined ? dateJoined : new Date()
                                 }
                             });
                     });
