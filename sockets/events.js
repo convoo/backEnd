@@ -20,8 +20,8 @@ module.exports = function (io) {
             sockets.auth.jwt(socket, io, msg);
         });
 
-        socket.on('twitterRequestToken', function (msg) {
-            sockets.auth.twitterRequestToken(socket, io, msg);
+        socket.on('twitterRequestToken', function () {
+            sockets.auth.twitterRequestToken(socket, io);
         });
 
         socket.on('twitterCallback', function(msg) {

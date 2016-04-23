@@ -82,7 +82,7 @@ exports.seen = function (userID, socketID, url) {
         });
 
         // make log
-        log.add('Updated Socket ID!', userID, url);
+        // log.add('Updated Socket ID!', userID, url);
  };
 
   //----------------------------- DISCONECTED USER

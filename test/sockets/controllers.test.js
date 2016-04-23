@@ -29,7 +29,7 @@ describe('Main Sockets', function () {
     });
 
 
-    describe('Hello', function () {
+    describe('#hello', function () {
 
         it('should send a message on connection', function (done) {
             var client = sockets.connect(socketsUrl, options);

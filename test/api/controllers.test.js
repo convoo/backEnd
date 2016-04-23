@@ -11,10 +11,11 @@ describe('Main API', function () {
     });
 
     afterEach(function(done){
-        server.close(done);
+        server.close();
+        done();
     });
 
-    describe('Index', function () {
+    describe('#index', function () {
 
         it('should return a welcome message', function (done) {
             request(server)

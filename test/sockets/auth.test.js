@@ -24,7 +24,7 @@ describe('Authentication Sockets', function () {
           done();
     });
 
-    describe('JWT tokens', function () {
+    describe('#jwt', function () {
 
 
         it('should respond with seen if the user sends a token', function (done) {
@@ -48,9 +48,20 @@ describe('Authentication Sockets', function () {
                 done();
             });
         });
-
     });
 
+    describe('#twitterRequestToken', function () {
 
+        it('should send a twitter requestToken, requestTokenSecret and redirect url to twitter.com', function (done) {
+            var client = sockets.connect(socketsUrl, options);
+            client.emit('twitterRequestToken');
+            client.on('twitterRequestToken', function(data){
+                data.should.have.property('requestToken').which.is.a.String();
+                data.should.have.property('requestTokenSecret').which.is.a.String();
+                data.should.have.property('redirectUrl').which.is.a.String();
+                done();
+            });
+        });
+    });
 
 });

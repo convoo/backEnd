@@ -15,31 +15,33 @@ describe('Authentication API', function () {
         server.close(done);
     });
 
-    describe('JWT Token', function () {
+    describe('#token', function () {
 
-        it('should add a cookie', function (done) {
-            var agent = request.agent(server);
-            agent
+        it('should return a token', function (done) {
+            request(server)
                 .get('/auth/token')
                 .end(function(err, res) {
                     should.not.exist(err);
-                    should.exist(res.headers['set-cookie']);
+                    should.exist(res.body.jwt);
                     done();
                 });
         });
 
+    });
 
-        it('should redirect to /', function (done) {
+    describe('#twitter', function () {
+
+        it('should return a requestToken, requestTokenSecret and redirectUrl to twitter.com', function (done) {
             request(server)
-                .get('/auth/token')
-                .expect(302)
-                .end(function(err, res){
+                .get('/auth/twitter')
+                .end(function(err, res) {
                     should.not.exist(err);
-                    res.header.location.should.equal('/');
+                    res.body.should.have.property('requestToken').which.is.a.String();
+                    res.body.should.have.property('requestTokenSecret').which.is.a.String();
+                    res.body.should.have.property('redirectUrl').which.is.a.String();
                     done();
-                })
+                });
         });
-
     });
 
 });
