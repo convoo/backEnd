@@ -137,30 +137,30 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                 return result.toArray()
                     .then(function(userArray){
                         if (userArray.length < 1) {
-                            return table.get(userID)
-                                .update({
-                                    user_name: twitterDetails.screen_name,
-                                    name: twitterDetails.name,
-                                    bio: twitterDetails.description,
-                                    location: twitterDetails.location,
-                                    user_type: "User"
-                                })
-                                .run(conn)
-                            // Catch any errors
-                                .catch(function (err) {
-                                    console.log("Error",err);
-                                })
-                            // Close the connection
-                                .finally(function (result) {
-                                    conn.close();
-                                    console.log(result);
-                                }).then(function(){
-                                    return Token.makeJWT(userID, 'User', '/');
-                                });
+                            var newUserID = userID;
                         } else {
-                            conn.close();
-                            return Token.makeJWT(userArray[0].id, userArray[0].user_type, '/');
+                            var newUserID = userArray[0].id;
                         }
+                        return table.get(newUserID)
+                            .update({
+                                user_name: twitterDetails.screen_name,
+                                name: twitterDetails.name,
+                                bio: twitterDetails.description,
+                                location: twitterDetails.location,
+                                profile_image: twitterDetails.profile_image_url_https,
+                                timezone: twitterDetails.time_zone,
+                                user_type: "User"
+                            })
+                            .run(conn)
+                        // Catch any errors
+                            .catch(function (err) {
+                                console.log("Error",err);
+                            })
+                        // Close the connection
+                            .then(function () {
+                                conn.close();
+                                return Token.makeJWT(userID, 'User', '/');
+                            });
                     });
             });
 
