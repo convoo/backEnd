@@ -30,6 +30,25 @@ exports.twitterRequestToken = function (socket, io, msg) {
         })
     };
 
+//----------------------------- TWITTER REQUEST TOKEN
+exports.twitterCallback = function (socket, io, msg) {
+    var t = msg.twitterToken;
+    var userID = token.readJWT(msg.jwt).user_id;
+    token.makeTwitterAccess(t.requestTokenSecret, t.requestToken, t.oauthVerifier, function (accessToken, accessTokenSecret) {
+        token.verifyTwitterAccess(accessToken, accessTokenSecret, function (twitterDetails) {
+            // TODO:  possibly change the users JWT cookie
+            user.twitterDetails(userID, accessToken, accessTokenSecret, twitterDetails)
+                .catch(function(err){
+                    console.log(err);
+                    io.to(socket.id).emit('twitterCallback', {status: "Error", message: err});
+                })
+                .then(function(){
+                    io.to(socket.id).emit('twitterCallback', {status: "Success", message: "User logged in"});
+                });
+        });
+    });
+}
+
 //----------------------------- ON DISCONECTED
 exports.disconnect = function (socket) {
             user.disconnect(socket.id);

@@ -128,8 +128,6 @@ exports.disconnect = function (socketID) {
 
 
 exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitterDetails) {
-    console.log("got here");
-    console.log(userID);
     var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
     return c.then(function (conn) {
         return table.get(userID)

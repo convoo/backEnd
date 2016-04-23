@@ -12,8 +12,10 @@ module.exports = function (io) {
 
         var sockets = require('./controllers');
 
+        // Index
         socket.emit('hello', {message: "Hello from Convoo!"})
 
+        // Authentication & Connection
         socket.on('jwt', function (msg) {
             sockets.auth.jwt(socket, io, msg);
         });
@@ -21,6 +23,10 @@ module.exports = function (io) {
         socket.on('twitterRequestToken', function (msg) {
             sockets.auth.twitterRequestToken(socket, io, msg);
         });
+
+        socket.on('twitterCallback', function(msg) {
+            sockets.auth.twitterCallback(socket, io, msg);
+        })
 
         socket.on('disconnect', function () {
             sockets.auth.disconnect(socket);
@@ -30,6 +36,7 @@ module.exports = function (io) {
             callBack(startTime);
         });
 
+        // Users
         socket.on('editProfile', function (msg) {
             sockets.user.editProfile(socket, msg);
         });
@@ -39,6 +46,7 @@ module.exports = function (io) {
             console.log(socket.id);
         });
 
+        // Rooms
         socket.on('addRoom', function (msg) {
             sockets.room.add(msg);
         });
