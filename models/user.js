@@ -26,6 +26,7 @@
 'use strict';
 var r = require("rethinkdb");
 var log = require('./log.js');
+var Token = require('../helpers/token');
 var table = r.db(process.env.RETHINK_DB).table("users");
 
 //----------------------------- ADD USER
@@ -130,23 +131,39 @@ exports.disconnect = function (socketID) {
 exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitterDetails) {
     var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
     return c.then(function (conn) {
-        return table.get(userID)
-            .update({
-                user_name: twitterDetails.screen_name,
-                name: twitterDetails.name,
-                bio: twitterDetails.description,
-                location: twitterDetails.location
-            })
+        return table.filter({user_name: twitterDetails.screen_name})
             .run(conn)
-        // Catch any errors
-            .catch(function (err) {
-                console.log(err);
-            })
-        // Close the connection
-            .finally(function (result) {
-                conn.close();
-                console.log(result);
+            .then(function (result) {
+                return result.toArray()
+                    .then(function(userArray){
+                        if (userArray.length < 1) {
+                            return table.get(userID)
+                                .update({
+                                    user_name: twitterDetails.screen_name,
+                                    name: twitterDetails.name,
+                                    bio: twitterDetails.description,
+                                    location: twitterDetails.location,
+                                    user_type: "User"
+                                })
+                                .run(conn)
+                            // Catch any errors
+                                .catch(function (err) {
+                                    console.log("Error",err);
+                                })
+                            // Close the connection
+                                .finally(function (result) {
+                                    conn.close();
+                                    console.log(result);
+                                }).then(function(){
+                                    return Token.makeJWT(userID, 'User', '/');
+                                });
+                        } else {
+                            conn.close();
+                            return Token.makeJWT(userArray[0].id, userArray[0].user_type, '/');
+                        }
+                    });
             });
+
     });
         // make log
 //   log.add('Upgrade visitor to user ', userID, "/");
