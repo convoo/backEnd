@@ -137,13 +137,19 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                 return result.toArray()
                     .then(function(userArray){
                         if (userArray.length < 1) {
-                            var newUserID = userID;
-                            var dateJoined = r.now();
+                            return {
+                                userID = userID,
+                                dateJoined = r.now()
+                            }
+
                         } else {
-                            var newUserID = userArray[0].id;
-                            var dateJoined = userArray[0].joined_on;
+                            return {
+                                userID = userArray[0].id,
+                                dateJoined = userArray[0].joined_on
+                            }
                         }
-                        return table.get(newUserID)
+                    }).then(function(data){
+                        return table.get(data.userID)
                             .update({
                                 user_name: twitterDetails.screen_name,
                                 name: twitterDetails.name,
@@ -152,7 +158,7 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                                 profile_image: twitterDetails.profile_image_url_https,
                                 timezone: twitterDetails.time_zone,
                                 user_type: "User",
-                                joined_on: dateJoined
+                                joined_on: data.dateJoined
                             })
                             .run(conn)
                         // Catch any errors
