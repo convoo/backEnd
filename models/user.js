@@ -138,14 +138,14 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                     .then(function(userArray){
                         if (userArray.length < 1) {
                             return {
-                                userID = userID,
-                                dateJoined = r.now()
+                                userID: userID,
+                                dateJoined: r.now()
                             }
 
                         } else {
                             return {
-                                userID = userArray[0].id,
-                                dateJoined = userArray[0].joined_on
+                                userID: userArray[0].id,
+                                dateJoined: userArray[0].joined_on
                             }
                         }
                     }).then(function(data){
