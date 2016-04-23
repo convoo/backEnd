@@ -18,28 +18,32 @@ exports.token = function (req, res) {
 exports.twitter = function (req, res) {
     token.makeTwitterRequest(function (redirectUrl, requestToken, requestTokenSecret, err) {
         if (!err) {
-            res.cookie('twitterToken', {requestToken: requestToken, requestTokenSecret: requestTokenSecret}, { expires: new Date(Date.now() + 9000000), httpOnly: true });
-            res.redirect(redirectUrl);
+            res.json({
+                requestToken: requestToken,
+                requestTokenSecret: requestTokenSecret,
+                redirectUrl: redirectUrl
+            });
         }
     })
 };
 
 //----------------------------- MAKE TWITTER ACESS TOKEN
 exports.twitterCallback = function (req, res) {
-    var t = req.cookies.twitterToken;
-    var userID = token.readJWT(req.cookies.jwt).user_id;
-    token.makeTwitterAccess(t.requestTokenSecret, t.requestToken, req.query.oauth_verifier, function (accessToken, accessTokenSecret) {
+    var t = req.body.twitterToken;
+    var userID = token.readJWT(req.body.jwt).user_id;
+    token.makeTwitterAccess(t.requestTokenSecret, t.requestToken, t.oauth_verifier, function (accessToken, accessTokenSecret) {
         token.verifyTwitterAccess(accessToken, accessTokenSecret, function (twitterDetails) {
-            // res.json(twitterDetails);
-          // TODO:  possibly change the users JWT cookie
+            // TODO:  possibly change the users JWT cookie
             user.twitterDetails(userID, accessToken, accessTokenSecret, twitterDetails)
+                .catch(function(err){
+                    console.log(err);
+                    res.json({status: "Error", error: err});
+                })
                 .then(function(){
-                    res.cookie('twitterToken', {}, { expires: new Date(Date.now() - 9000000), httpOnly: true });
-                    res.redirect('/');
+                    res.json({status: "Success", message: "User logged in"});
                 });
         });
-
-    })
+    });
 };
 
 //----------------------------- LOG OUT
