@@ -22,10 +22,13 @@ exports.profile = function (req, res) {
  * @apiName getUserLogs
  * @apiGroup User
  * @apiPermission Admin
- * 
+ * @apiVersion 0.0.1
+ *
+ * @apiParam {String} id The user id to get the logs of
+ *
  * @apiSuccess {Array} logs An array of log objects associated with the user
  * @apiError UserNotFound The id of the User was not found.
- * 
+ *
  */
 exports.logs = function (req, res) {
         log.add('Get Logs', token.readJWT(req.body.authToken).user_id, Date.now(), '/user/' + req.params.userID + '/logs/');
