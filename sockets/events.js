@@ -52,12 +52,12 @@ module.exports = function (io) {
 
 
         function rateLimit(max){
-            if(Date.now() - socket.requested < max){
+            if(Date.now() - socket.lastEventTimestamp < max){
                 socket.disconnect();
                 return;
             }
         }
-        socket.requested = Date.now();
+        socket.lastEventTimestamp = Date.now();
 
 
 
