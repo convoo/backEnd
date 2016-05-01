@@ -5,66 +5,51 @@
 ///////////////----------------------------- EVENTS
 'use strict';
 
+
 module.exports = function (io) {
 
     //-- AUTH CONNECT & DISCONNECT
     io.on('connect', function (socket, msg) {
 
+        socket.lastAcivity = new Array(Date.now().toString());
 
         var sockets = require('./controllers');
 
         socket.emit('hello', {message: "Hello from Convoo!"})
 
         socket.on('jwt', function (msg) {
-            rateLimit(100);
+            rateLimit(socket);
             sockets.auth.jwt(socket, io, msg);
         });
 
         socket.on('twitterRequestToken', function (msg) {
-            rateLimit(100);
+            rateLimit(socket);
             sockets.auth.twitterRequestToken(socket, io, msg);
         });
 
         socket.on('disconnect', function () {
-            rateLimit(100);
             sockets.auth.disconnect(socket);
         });
 
         socket.on('latency', function (startTime, callBack) {
-            rateLimit(100);
+            rateLimit(socket);
             callBack(startTime);
         });
 
         socket.on('editProfile', function (msg) {
-            rateLimit(100);
+            rateLimit(socket);
             sockets.user.editProfile(socket, msg);
         });
 
         socket.on('getProfile', function (msg) {
-            rateLimit(100);
+            rateLimit(socket);
             sockets.user.getProfile(socket, io, msg);
         });
 
         socket.on('addRoom', function (msg) {
-            rateLimit(100);
+            rateLimit(socket);
             sockets.room.add(msg);
         });
-
-
-        function rateLimit(max){
-            if(Date.now() - socket.lastEventTimestamp < max){
-               // socket.disconnect();
-               // return;
-               console.log('Slow down: ' + Date.now() - socket.lastEventTimestamp < max);
-            }
-        }
-        socket.lastEventTimestamp = Date.now();
-
-
-
-
-
-
 
 
 
@@ -73,5 +58,33 @@ module.exports = function (io) {
             sockets.onlineUsers(socket,io, r);
         });
     });
+
+
+
     //-- LOG OUT
 };
+
+        function rateTracker(socket){
+            if (socket.lastActivity == undefined) {
+                socket.lastActivity = [];
+            }
+
+            if (socket.lastActivity.length > 5) {
+                socket.lastActivity.shift();
+            }
+            socket.lastActivity.push(Date.now().toString());
+        }
+
+        function rateLimit(socket){
+
+            rateTracker(socket);
+            if (socket.lastActivity.length < 5){
+               return;
+            }
+
+            if(parseInt(Date.now()) -parseInt(socket.lastAcivity[0]) < 200){
+               socket.disconnect();
+               console.log('Slow down: ');
+               return;
+            }
+        }
