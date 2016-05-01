@@ -55,7 +55,7 @@ module.exports = function (io) {
             if(Date.now() - socket.lastEventTimestamp < max){
                // socket.disconnect();
                // return;
-               console.log('Slow down!');
+               console.log('Slow down: ' + Date.now() - socket.lastEventTimestamp < max);
             }
         }
         socket.lastEventTimestamp = Date.now();
