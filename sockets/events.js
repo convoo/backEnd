@@ -53,8 +53,9 @@ module.exports = function (io) {
 
         function rateLimit(max){
             if(Date.now() - socket.lastEventTimestamp < max){
-                socket.disconnect();
-                return;
+               // socket.disconnect();
+               // return;
+               console.log('Slow down!');
             }
         }
         socket.lastEventTimestamp = Date.now();
