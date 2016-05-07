@@ -40,7 +40,7 @@ module.exports = function (io) {
         socket.on('editProfile', function (msg) {
             sockets.user.editProfile(msg)
                 .catch(function(err){
-                    socket.emit('editProfile', {error: "An error occurred", result: err};
+                    socket.emit('editProfile', {error: "An error occurred", result: err});
                 })
                 .then(function(result){
                     socket.emit('editProfile', {result: result});
@@ -50,7 +50,7 @@ module.exports = function (io) {
         socket.on('getProfile', function (msg) {
             sockets.user.getProfile(msg)
                 .catch(function(err){
-                    socket.emit('getProfile', {error: "An error occurred", result: err};
+                    socket.emit('getProfile', {error: "An error occurred", result: err});
                 })
                 .then(function(result){
                     socket.emit('getProfile', {result: result});
@@ -60,7 +60,7 @@ module.exports = function (io) {
         socket.on('forceDeleteUser', function (msg) {
             sockets.user.forceDelete(msg)
                 .catch(function(err){
-                    socket.emit('forceDeleteUser', {error: "An error occurred", result: err};
+                    socket.emit('forceDeleteUser', {error: "An error occurred", result: err});
                 })
                 .then(function(result){
                     socket.emit('forceDeleteUser', {result: result});
@@ -71,7 +71,7 @@ module.exports = function (io) {
         socket.on('addRoom', function (msg) {
             sockets.room.add(msg)
                 .catch(function(err){
-                    socket.emit('addRoom', {error: "An error occurred", result: err};
+                    socket.emit('addRoom', {error: "An error occurred", result: err});
                 })
                 .then(function(result){
                     socket.emit('addRoom',{result: result});
@@ -80,7 +80,7 @@ module.exports = function (io) {
         socket.on('getRoom', function (msg) {
             sockets.room.get(msg)
                 .catch(function(err){
-                    socket.emit('getRoom', {error: "An error occurred", result: err};
+                    socket.emit('getRoom', {error: "An error occurred", result: err});
                 })
                 .then(function(result){
                     socket.emit('getRoom',{result: result});
@@ -89,7 +89,7 @@ module.exports = function (io) {
         socket.on('getRoomBySlug', function (msg) {
             sockets.room.getBySlug(msg)
                 .catch(function(err){
-                    socket.emit('getRoomBySlug', {error: "An error occurred", result: err};
+                    socket.emit('getRoomBySlug', {error: "An error occurred", result: err});
                 })
                 .then(function(result){
                     socket.emit('getRoomBySlug',{result: result});
@@ -98,7 +98,7 @@ module.exports = function (io) {
         socket.on('forceDeleteRoom', function (msg) {
             sockets.room.forceDelete(msg)
                 .catch(function(err){
-                    socket.emit('forceDeleteRoom', {error: "An error occurred", result: err};
+                    socket.emit('forceDeleteRoom', {error: "An error occurred", result: err});
                 })
                 .then(function(result){
                     socket.emit('forceDeleteRoom',{result: result});
