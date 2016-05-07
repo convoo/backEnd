@@ -37,5 +37,5 @@
 
   //---------------------
   exports.twitterCallback = function (socket, io) {
-   io.to(socket.id).emit('twitterCallback', {status: 'Success'});
+   io.to(socket.id).emit('twitterCallback', {status: 'Success', jwt:'11111111111111111111', username:'username', photo:'https://avatars2.githubusercontent.com/u/14357697?v=3&s=460', dateJoined:'213413422'});
 };
