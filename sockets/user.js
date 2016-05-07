@@ -17,3 +17,7 @@ exports.getProfile = function (msg) {
 exports.onlineUsers = function () {
     return User.onlineAll();
 };
+
+exports.forceDelete = function (msg) {
+    return User.forceDelete(msg.userID);
+}

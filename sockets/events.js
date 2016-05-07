@@ -57,13 +57,13 @@ module.exports = function (io) {
                 });
         });
 
-        socket.on('forceDelete', function (msg) {
+        socket.on('forceDeleteUser', function (msg) {
             sockets.user.forceDelete(msg)
                 .catch(function(err){
-                    socket.emit('forceDelete', {error: "An error occurred", result: err};
+                    socket.emit('forceDeleteUser', {error: "An error occurred", result: err};
                 })
                 .then(function(result){
-                    socket.emit('forceDelete', {result: result});
+                    socket.emit('forceDeleteUser', {result: result});
                 });
         });
 
