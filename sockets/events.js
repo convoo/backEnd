@@ -48,7 +48,10 @@ module.exports = function (io) {
 
         // Rooms
         socket.on('addRoom', function (msg) {
-            sockets.room.add(msg);
+            sockets.room.add(msg)
+                .then(function(result){
+                    socket.emit('roomAdded',{result: result});
+                });
         });
 
 

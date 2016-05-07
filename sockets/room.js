@@ -10,6 +10,6 @@ exports.add = function (msg) {
         var roomName = msg.roomData;
         // console.log(userID);
         // console.log(roomData);
-        room.add(userID, roomData);
+        return room.add(userID, roomData);
 };
 
