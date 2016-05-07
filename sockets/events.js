@@ -39,69 +39,76 @@ module.exports = function (io) {
         // Users
         socket.on('editProfile', function (msg) {
             sockets.user.editProfile(msg)
-                .catch(function(err){
-                    socket.emit('editProfile', {error: "An error occurred", result: err});
-                })
                 .then(function(result){
-                    socket.emit('editProfile', {result: result});
+                    if (result == null) {
+                        socket.emit('editProfile', {error: "An error occurred", result: result});
+                    } else {
+                        socket.emit('editProfile', {result: result});
+                    }
                 });
         });
 
         socket.on('getProfile', function (msg) {
             sockets.user.getProfile(msg)
-                .catch(function(err){
-                    socket.emit('getProfile', {error: "An error occurred", result: err});
-                })
                 .then(function(result){
-                    socket.emit('getProfile', {result: result});
+                    if (result == null) {
+                        socket.emit('getProfile', {error: "An error occurred", result: result});
+                    } else {
+                        socket.emit('getProfile', {result: result});
+                    }
                 });
         });
 
         socket.on('forceDeleteUser', function (msg) {
             sockets.user.forceDelete(msg)
-                .catch(function(err){
-                    socket.emit('forceDeleteUser', {error: "An error occurred", result: err});
-                })
                 .then(function(result){
-                    socket.emit('forceDeleteUser', {result: result});
+                    if (result == null) {
+                        socket.emit('forceDeleteUser', {error: "An error occurred", result: result});
+                    } else {
+                        socket.emit('forceDeleteUser', {result: result});
+                    }
                 });
         });
 
         // Rooms
         socket.on('addRoom', function (msg) {
             sockets.room.add(msg)
-                .catch(function(err){
-                    socket.emit('addRoom', {error: "An error occurred", result: err});
-                })
                 .then(function(result){
-                    socket.emit('addRoom',{result: result});
+                    if (result == null) {
+                        socket.emit('addRoom', {error: "An error occurred", result: result});
+                    } else {
+                        socket.emit('addRoom', {result: result});
+                    }
                 });
         });
         socket.on('getRoom', function (msg) {
             sockets.room.get(msg)
-                .catch(function(err){
-                    socket.emit('getRoom', {error: "An error occurred", result: err});
-                })
                 .then(function(result){
-                    socket.emit('getRoom',{result: result});
+                    if (result == null) {
+                        socket.emit('getRoom', {error: "An error occurred", result: result});
+                    } else {
+                        socket.emit('getRoom', {result: result});
+                    }
                 });
         });
         socket.on('getRoomBySlug', function (msg) {
             sockets.room.getBySlug(msg)
-                .catch(function(err){
-                    socket.emit('getRoomBySlug', {error: "An error occurred", result: err});
-                })
                 .then(function(result){
-                    socket.emit('getRoomBySlug',{result: result});
+                    if (result == null) {
+                        socket.emit('getRoomBySlug', {error: "An error occurred", result: result});
+                    } else {
+                        socket.emit('getRoomBySlug', {result: result});
+                    }
                 });
         });
         socket.on('forceDeleteRoom', function (msg) {
             sockets.room.forceDelete(msg)
-                .catch(function(err){
-                    socket.emit('forceDeleteRoom', {error: "An error occurred", result: err});
-                })
                 .then(function(result){
-                    socket.emit('forceDeleteRoom',{result: result});
+                    if (result == null) {
+                        socket.emit('forceDeleteRoom', {error: "An error occurred", result: result});
+                    } else {
+                        socket.emit('forceDeleteRoom', {result: result});
+                    }
                 });
         });
 
