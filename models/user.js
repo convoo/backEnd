@@ -48,6 +48,7 @@ exports.add = function (userType, userID, socketID) {
             // Catch any errors
             .catch(function(err){
                 console.log("Error: ", err);
+                return err;
             })
             // Close the connection
             .then(function(result){
@@ -63,9 +64,9 @@ exports.seen = function (userID, socketID, url) {
 
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
-        c.then(function(conn){
+        return c.then(function(conn){
             // update socket id
-            table.filter({id:userID}).update({
+            return table.filter({id:userID}).update({
                 socket_id: socketID,
                 last_seen: r.now(),
                 status:'online'
@@ -75,10 +76,12 @@ exports.seen = function (userID, socketID, url) {
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
-            .finally(function(){
+            .finally(function(result){
                 conn.close();
+                return result;
             });
         });
 
@@ -92,9 +95,9 @@ exports.disconnect = function (socketID) {
 
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
-        c.then(function(conn){
+        return c.then(function(conn){
             // update socket id
-            table.filter({socket_id:socketID}).update({
+            return table.filter({socket_id:socketID}).update({
                 last_seen: r.now(),
                 status:'offline'
 
@@ -103,10 +106,12 @@ exports.disconnect = function (socketID) {
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
-            .finally(function(){
+            .finally(function(result){
                 conn.close();
+                return result;
             });
         });
 
@@ -165,6 +170,7 @@ exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitt
                         // Catch any errors
                             .catch(function (err) {
                                 console.log("Error",err);
+                                return err;
                             })
                         // Close the connection
                             .then(function () {
@@ -202,6 +208,7 @@ exports.upgrade = function (userID, photoOriginal, twitterID, lastUpdated) {
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
             .finally(function(){
@@ -230,6 +237,7 @@ exports.del = function (userID) {
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
             .finally(function(){
@@ -253,6 +261,7 @@ exports.forceDelete = function (userID) {
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
             .then(function(result){
@@ -276,6 +285,7 @@ exports.makeAdmin = function(userID, byUserID){
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
             .finally(function(){
@@ -307,6 +317,7 @@ exports.onlineAll = function(){
             .catch(function(err, result){
                 console.log(err);
                 console.log(result);
+                return err;
             })
             // Close the connection
             .then(function(result){
@@ -352,6 +363,7 @@ exports.edit = function(userID, userData){
                 // Catch any errors
                 .catch(function(err){
                     console.log(err);
+                    return err;
                 })
                 // Close the connection
                 .then(function(result){
@@ -371,6 +383,7 @@ exports.get = function (userID) {
                 // Catch any errors
                 .catch(function(err){
                     console.log(err);
+                    return err;
                 })
                 .then(function(result){
                     conn.close();
@@ -400,6 +413,7 @@ exports.getLogs = function(userID){
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
             .finally(function(logs){
