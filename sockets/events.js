@@ -38,18 +38,33 @@ module.exports = function (io) {
 
         // Users
         socket.on('editProfile', function (msg) {
-            sockets.user.editProfile(msg);
+            sockets.user.editProfile(msg)
+                .catch(function(err){
+                    socket.emit('editProfile', {error: "An error occurred", result: err};
+                })
+                .then(function(result){
+                    socket.emit('editProfile', {result: result});
+                });
         });
 
         socket.on('getProfile', function (msg) {
-            sockets.user.getProfile(msg);
+            sockets.user.getProfile(msg)
+                .catch(function(err){
+                    socket.emit('getProfile', {error: "An error occurred", result: err};
+                })
+                .then(function(result){
+                    socket.emit('getProfile', {result: result});
+                });
         });
 
         // Rooms
         socket.on('addRoom', function (msg) {
             sockets.room.add(msg)
+                .catch(function(err){
+                    socket.emit('addRoom', {error: "An error occurred", result: err};
+                })
                 .then(function(result){
-                    socket.emit('roomAdded',{result: result});
+                    socket.emit('addRoom',{result: result});
                 });
         });
 
