@@ -57,6 +57,16 @@ module.exports = function (io) {
                 });
         });
 
+        socket.on('forceDelete', function (msg) {
+            sockets.user.forceDelete(msg)
+                .catch(function(err){
+                    socket.emit('forceDelete', {error: "An error occurred", result: err};
+                })
+                .then(function(result){
+                    socket.emit('forceDelete', {result: result});
+                });
+        });
+
         // Rooms
         socket.on('addRoom', function (msg) {
             sockets.room.add(msg)
@@ -65,6 +75,33 @@ module.exports = function (io) {
                 })
                 .then(function(result){
                     socket.emit('addRoom',{result: result});
+                });
+        });
+        socket.on('getRoom', function (msg) {
+            sockets.room.get(msg)
+                .catch(function(err){
+                    socket.emit('getRoom', {error: "An error occurred", result: err};
+                })
+                .then(function(result){
+                    socket.emit('getRoom',{result: result});
+                });
+        });
+        socket.on('getRoomBySlug', function (msg) {
+            sockets.room.getBySlug(msg)
+                .catch(function(err){
+                    socket.emit('getRoomBySlug', {error: "An error occurred", result: err};
+                })
+                .then(function(result){
+                    socket.emit('getRoomBySlug',{result: result});
+                });
+        });
+        socket.on('forceDeleteRoom', function (msg) {
+            sockets.room.forceDelete(msg)
+                .catch(function(err){
+                    socket.emit('forceDeleteRoom', {error: "An error occurred", result: err};
+                })
+                .then(function(result){
+                    socket.emit('forceDeleteRoom',{result: result});
                 });
         });
 
