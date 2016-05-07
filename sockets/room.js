@@ -13,3 +13,14 @@ exports.add = function (msg) {
         return room.add(userID, roomData);
 };
 
+exports.get = function (msg) {
+        return room.get(msg.roomID);
+}
+
+exports.getBySlug = function (msg) {
+        return room.getBySlug(msg.roomSlug);
+}
+
+exports.forceDelete = function (msg) {
+        return room.forceDelete(msg.roomID);
+}
