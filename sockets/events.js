@@ -38,12 +38,11 @@ module.exports = function (io) {
 
         // Users
         socket.on('editProfile', function (msg) {
-            sockets.user.editProfile(socket, msg);
+            sockets.user.editProfile(msg);
         });
 
         socket.on('getProfile', function (msg) {
-            sockets.user.getProfile(socket, io, msg);
-            console.log(socket.id);
+            sockets.user.getProfile(msg);
         });
 
         // Rooms
@@ -59,8 +58,11 @@ module.exports = function (io) {
 
 
 // TODO: Make this changefeed work
-        socket.on('onlineUsers', function (callBack) {
-            sockets.onlineUsers(socket,io, r);
+        socket.on('onlineUsers', function () {
+            sockets.user.onlineUsers()
+                .then(function(result){
+                     socket.emit("returnOnlineUsers", {result: result});
+                });
         });
     });
     //-- LOG OUT

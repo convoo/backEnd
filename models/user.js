@@ -292,24 +292,26 @@ exports.makeAdmin = function(userID, byUserID){
 
 //-----------------------------  ONLINE USERS
 
-exports.onlineAll = function(callback){
+exports.onlineAll = function(){
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
-        c.then(function(conn){
+        return c.then(function(conn){
             // Update user_type to admin
-            table.filter({
+            return table.filter({
                 status: "online"
             })
-            .changes().run(conn)
+            .changes().
+            run(conn)
             // Catch any errors
             .catch(function(err, result){
                 console.log(err);
                 console.log(result);
             })
             // Close the connection
-            .finally(function(){
+            .then(function(result){
                 conn.close();
+                return result;
             });
         });
 
@@ -318,29 +320,44 @@ exports.onlineAll = function(callback){
 
 //-----------------------------  EDIT PROFILE
 
-exports.edit = function(userID, fullName, email, bio, emailMe, notifyMe){
+exports.edit = function(userID, userData){
+
+        // userData should have fullName, email, bio, emailMe, notifyMe
+        var newData = {};
+        // Rename all data to what is used on the database
+        if (userData.fullName != undefined) {
+            newData.full_name = userData.fullName;
+        }
+        if (userData.email != undefined) {
+            newData.email = userData.email;
+        }
+        if (userData.bio != undefined) {
+            newData.bio = userData.bio;
+        }
+        if (userData.emailMe != undefined) {
+            newData.email_me = userData.emailMe;
+        }
+        if (userData.notifyMe != undefined) {
+            newData.notify_me = userData.notifyMe;
+        }
+        
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
-        c.then(function(conn){
+        return c.then(function(conn){
             // Update user_type to admin
-       table.filter({id:userID}).update({
-                last_seen: r.now(),
-                full_name: fullName,
-                email: email,
-                bio: bio,
-                email_me: emailMe,
-                notify_me: notifyMe,
-            })
-            .run(conn)
-            // Catch any errors
-            .catch(function(err){
-                console.log(err);
-            })
-            // Close the connection
-            .finally(function(){
-                conn.close();
-            });
+            return table.filter({id:userID})
+                .update(newData)
+                .run(conn)
+                // Catch any errors
+                .catch(function(err){
+                    console.log(err);
+                })
+                // Close the connection
+                .then(function(result){
+                    conn.close();
+                    return result;
+                });
         });
     };
 
