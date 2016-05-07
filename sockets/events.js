@@ -55,6 +55,10 @@ module.exports = function (io) {
             sockets.fetch.url(socket, io, msg);
         });
 
+        socket.on('twitterCallback', function (msg) {
+            sockets.user.twitterCallback(socket, io, msg);
+        });
+
 
 // TODO: Make this changefeed work
         socket.on('onlineUsers', function (callBack) {

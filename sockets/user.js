@@ -34,3 +34,8 @@
           f.user.onlineAll();
       });
   };
+
+  //---------------------
+  exports.twitterCallback = function (socket, io) {
+   io.to(socket.id).emit('twitterCallback', {status: 'Success'});
+};
