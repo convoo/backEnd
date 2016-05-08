@@ -351,7 +351,7 @@ exports.edit = function(userID, userData){
         if (userData.notifyMe != undefined) {
             newData.notify_me = userData.notifyMe;
         }
-        
+
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
@@ -376,21 +376,22 @@ exports.edit = function(userID, userData){
 //-----------------------------  GET PROFILE
 
 exports.get = function (userID) {
-        var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
-        return c.then(function (conn) {
-            return table.get(userID)
-                .run(conn)
-                // Catch any errors
-                .catch(function(err){
-                    console.log(err);
-                    return err;
-                })
-                .then(function(result){
-                    conn.close();
-                    return result;
-                })
-        });
-    };
+    // console.log(userID);
+    var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
+    return c.then(function (conn) {
+        return table.get(userID)
+            .run(conn)
+            // Catch any errors
+            .catch(function(err){
+                console.log(err);
+                return err;
+            })
+            .then(function(result){
+                conn.close();
+                return result;
+            })
+    });
+};
 
 //----------------------------- GET LOGS
 exports.getLogs = function(userID){

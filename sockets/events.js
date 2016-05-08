@@ -41,7 +41,7 @@ module.exports = function (io) {
             sockets.user.editProfile(msg)
                 .then(function(result){
                     if (result == null) {
-                        socket.emit('editProfile', {error: "An error occurred", result: result});
+                        socket.emit('editProfile', {error: "An error occurred"});
                     } else {
                         socket.emit('editProfile', {result: result});
                     }
@@ -52,7 +52,7 @@ module.exports = function (io) {
             sockets.user.getProfile(msg)
                 .then(function(result){
                     if (result == null) {
-                        socket.emit('getProfile', {error: "An error occurred", result: result});
+                        socket.emit('getProfile', {error: "An error occurred"});
                     } else {
                         socket.emit('getProfile', {result: result});
                     }
@@ -63,7 +63,7 @@ module.exports = function (io) {
             sockets.user.forceDelete(msg)
                 .then(function(result){
                     if (result == null) {
-                        socket.emit('forceDeleteUser', {error: "An error occurred", result: result});
+                        socket.emit('forceDeleteUser', {error: "An error occurred"});
                     } else {
                         socket.emit('forceDeleteUser', {result: result});
                     }
@@ -75,7 +75,7 @@ module.exports = function (io) {
             sockets.room.add(msg)
                 .then(function(result){
                     if (result == null) {
-                        socket.emit('addRoom', {error: "An error occurred", result: result});
+                        socket.emit('addRoom', {error: "An error occurred"});
                     } else {
                         socket.emit('addRoom', {result: result});
                     }
@@ -85,7 +85,7 @@ module.exports = function (io) {
             sockets.room.get(msg)
                 .then(function(result){
                     if (result == null) {
-                        socket.emit('getRoom', {error: "An error occurred", result: result});
+                        socket.emit('getRoom', {error: "An error occurred"});
                     } else {
                         socket.emit('getRoom', {result: result});
                     }
@@ -95,7 +95,7 @@ module.exports = function (io) {
             sockets.room.getBySlug(msg)
                 .then(function(result){
                     if (result == null) {
-                        socket.emit('getRoomBySlug', {error: "An error occurred", result: result});
+                        socket.emit('getRoomBySlug', {error: "An error occurred"});
                     } else {
                         socket.emit('getRoomBySlug', {result: result});
                     }
@@ -105,7 +105,7 @@ module.exports = function (io) {
             sockets.room.forceDelete(msg)
                 .then(function(result){
                     if (result == null) {
-                        socket.emit('forceDeleteRoom', {error: "An error occurred", result: result});
+                        socket.emit('forceDeleteRoom', {error: "An error occurred"});
                     } else {
                         socket.emit('forceDeleteRoom', {result: result});
                     }

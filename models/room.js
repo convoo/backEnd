@@ -30,6 +30,13 @@ exports.add = function (userID, roomData) {
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
         var today = new Date();
 
+        // console.log(userID);
+        // console.log(roomData);
+
+        if (userID == null || userID == undefined) {
+            return false;
+        }
+
         return c.then(function(conn){
             return User.get(userID).then(function(user){
                 // Insert room
@@ -70,6 +77,9 @@ exports.add = function (userID, roomData) {
 
 //----------------------------- DELETE ROOM
 exports.get = function (roomID) {
+    if (roomID == null || roomID == undefined) {
+        return false;
+    }
     var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
     return c.then(function (conn) {
         return table.get(roomID)
@@ -100,7 +110,7 @@ exports.getBySlug = function (roomSlug) {
                 return err;
             })
             .then(function(result){
-                console.log(result);
+                // console.log(result);
                 conn.close();
                 return result;
             });
@@ -136,6 +146,7 @@ exports.del = function (userID, roomID) {
 };
 
 exports.forceDelete = function (roomID) {
+    // console.log(roomID);
     // connect
     var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
