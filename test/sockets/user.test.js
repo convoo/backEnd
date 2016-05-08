@@ -30,6 +30,7 @@ describe('User Sockets', function () {
         var client = sockets.connect(socketsUrl, options);
         client.emit('getProfile', {userID: "123asfoi212312"});
         client.on('getProfile', function(data){
+            should.exist(data);
             data.should.have.property('error').which.is.a.String();
             done();
         });

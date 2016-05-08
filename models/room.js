@@ -36,9 +36,9 @@ exports.add = function (userID, roomData) {
                 return table.insert({
                     title: roomData.title,
                     canJoin: roomData.canJoin,
-                    sharedUrl: roomData.url,
-                    description: roomData.description,
-                    // slug: slug(roomData.title) + "-@" + user.user_name + "-" + today.getUTCDate + "-" + today.toLocaleString("en-us", {month: "short"}) + "-" + today.getFullYear,
+                    sharedUrl: roomData.url != undefined ? roomData.url : null,
+                    description: roomData.description != undefined ? roomData.description : null,
+                    slug: slug(roomData.title) + (user.user_name != undefined ? "-@" +user.user_name : "-"+user.id ) + "-" + today.getUTCDate() + "-" + today.toLocaleString("en-us", {month: "short"}) + "-" + today.getFullYear(),
                     // TODO: Create function for URL shortener for room URL
                     // TODO: Add short URL for each room to database
                     // TODO: Handle rooms with the same name by prepending the user name of the creator and postpending a version number of the user makes more that one room with the same name
@@ -54,8 +54,13 @@ exports.add = function (userID, roomData) {
                 // Close the connection
                 .then(function(result){
                     conn.close();
-                    return result;
+                    return {
+                        status: "success",
+                        roomID: result.generated_keys[0]
+                    };
                 })
+            }).catch(function(err){
+                return err;
             });
         });
 
@@ -72,6 +77,7 @@ exports.get = function (roomID) {
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             .then(function(result){
                 conn.close();
@@ -87,12 +93,15 @@ exports.getBySlug = function (roomSlug) {
             .run(conn)
             // Catch any errors
             .catch(function(err){
+                console.log("got an error");
                 console.log(err);
+                return err;
             })
             .then(function(result){
+                console.log(result);
                 conn.close();
                 return result;
-            })
+            });
     });
 };
 
@@ -111,10 +120,12 @@ exports.del = function (userID, roomID) {
         // Catch any errors
         .catch(function(err){
             console.log(err);
+            return err;
         })
         // Close the connection
-        .finally(function(){
+        .then(function(result){
             conn.close();
+            return result;
         });
     });
 
@@ -137,6 +148,7 @@ exports.forceDelete = function (roomID) {
         // Catch any errors
         .catch(function(err){
             console.log(err);
+            return err;
         })
         // Close the connection
         .then(function(result){

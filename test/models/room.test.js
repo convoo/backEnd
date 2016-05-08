@@ -30,19 +30,19 @@ describe('Room Model', function () {
     // TODO: Figure out how to separate and test in unit tests
     it('should add, get and force delete a room', function () {
         Room.add(userID, roomData)
-        .then(function(result){
-            return Room.get(userID);
-        }).then(function(result){
-            result.should.be.an.Object();
-            result.created_by.should.equal(userID);
-            return result.id;
-        }).then(function(addedID){
-            Room.forceDelete(addedID);
-            return addedID;
-        }).then(function(addedID){
-            return Room.get(addedID);
-        }).then(function(result){
-            should.not.exist(result);
-        });
+            .then(function(result){
+                return Room.get(result.roomID);
+            }).then(function(result){
+                result.should.be.an.Object();
+                result.created_by.should.equal(userID);
+                return result.id;
+            }).then(function(addedID){
+                Room.forceDelete(addedID);
+                return addedID;
+            }).then(function(addedID){
+                return Room.get(addedID);
+            }).then(function(result){
+                should.not.exist(result);
+            });
     });
 });
