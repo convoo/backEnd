@@ -23,9 +23,9 @@ describe('Main Sockets', function () {
 
     it('should be able to connect', function (done) {
         var client = sockets.connect(socketsUrl, options);
-            client.on('connect', function(){
-                done();
-            });
+        client.on('connect', function(){
+            done();
+        });
     });
 
 

@@ -91,6 +91,9 @@ exports.getBySlug = function (roomSlug) {
     return c.then(function (conn) {
         return table.filter({slug: roomSlug})
             .run(conn)
+            .then(function(result){
+                return result.toArray()[0];
+            })
             // Catch any errors
             .catch(function(err){
                 console.log("got an error");
