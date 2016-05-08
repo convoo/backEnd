@@ -69,16 +69,10 @@ describe('Room Sockets', function () {
                 getRoomData.result.should.have.property('slug').which.is.a.String();
                 client.emit('getRoomBySlug', {roomSlug: getRoomData.result.slug});
                 client.on("getRoomBySlug", function(getRoomSlugData){
-                    console.log(getRoomSlugData);
-                    console.log("1");
                     should.exist(getRoomSlugData);
-                    console.log("2");
                     should(getRoomSlugData).be.ok();
-                    console.log("3");
                     getRoomSlugData.should.have.property('result');
-                    console.log("4");
                     getRoomSlugData.result.should.have.property('id');
-                    console.log("5");
                     client.emit('forceDeleteRoom', {roomID: getRoomSlugData.result.id});
                     client.on('forceDeleteRoom', function(deleteData){
                         deleteData.should.not.have.property('error');

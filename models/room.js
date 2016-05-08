@@ -96,7 +96,6 @@ exports.getBySlug = function (roomSlug) {
             })
             // Catch any errors
             .catch(function(err){
-                console.log("got an error");
                 console.log(err);
                 return err;
             })
