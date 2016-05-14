@@ -15,27 +15,27 @@ describe('Authentication Sockets', function () {
     var server;
 
     beforeEach(function(){
-         delete require.cache[require.resolve('../../server.js')];
-         server = require('../../server.js').server;
+        delete require.cache[require.resolve('../../server.js')];
+        server = require('../../server.js').server;
     });
 
     afterEach(function(done){
         server.close();
-          done();
+        done();
     });
 
-    describe('JWT tokens', function () {
+    describe('#jwt', function () {
 
 
-        it('should respond with seen if the user sends a token', function (done) {
-            var client1 = sockets.connect(socketsUrl, options);
-            client1.emit('jwt', {
+
+        it('should respond with seen and token if the user sends a token', function (done) {
+            var client = sockets.connect(socketsUrl, options);
+            client.emit('jwt', {
                 jwt: token.makeJWT(token.makeID(), 'guest', '/')
             });
-            client1.on('jwt', function(data){
+            client.on('jwt', function(data){
                 should.exist(data.seen);
-                should.not.exist(data.token);
-                client1.disconnect();
+                should.exist(data.token);
                 done();
             });
         });
@@ -50,9 +50,20 @@ describe('Authentication Sockets', function () {
                 done();
             });
         });
-
     });
 
+    describe('#twitterRequestToken', function () {
 
+        it('should send a twitter requestToken, requestTokenSecret and redirect url to twitter.com', function (done) {
+            var client = sockets.connect(socketsUrl, options);
+            client.emit('twitterRequestToken');
+            client.on('twitterRequestToken', function(data){
+                data.should.have.property('requestToken').which.is.a.String();
+                data.should.have.property('requestTokenSecret').which.is.a.String();
+                data.should.have.property('redirectUrl').which.is.a.String();
+                done();
+            });
+        });
+    });
 
 });

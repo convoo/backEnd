@@ -14,42 +14,44 @@ var log = require('../models/log.js');
  * @apiPermission Public
  * @apiVersion 0.0.1
  *
- * @apiSuccess {String} jwt A JWT token that is returned as a cookie.
+ * @apiSuccess {String} jwt A new JWT token
  *
  */
 exports.token = function (req, res) {
     if (!req.body.authToken) {
         var t = (token.makeJWT(token.makeID(), 'visitor', process.env.WEB_SITE));
-        res.cookie('jwt', t, { expires: new Date(Date.now() + (2147483647*100)), httpOnly: true });
-        res.redirect('/');
+        res.json({jwt: t});
     };
 }
 
 //----------------------------- MAKE TWITTER REQUEST TOKEN
 /**
- * @api {get} /auth/twitter Authenticate with twitter
+
+ * @api {get} /auth/twitter Get data to authenticate with twitter
  * @apiName getTwitter
  * @apiGroup Auth
  * @apiPermission Public
  * @apiVersion 0.0.1
  *
- * @apiDescription This endpoint redirects to twitter for authentication.
- * It works closely with getTwitterCallback.
  *
- * @apiSuccess {String} requestToken The request token to twitter - part of cookie
- * @apiSuccess {String} requestTokenSecret The request token secret - part of cookie
- * @apiSuccess {Redirect} redirectUrl The url where the user can authenticate with twitter
- *
+ * @apiSuccess {String} requestToken The request token to twitter
+ * @apiSuccess {String} requestTokenSecret The request token secret
+ * @apiSuccess {String} redirectUrl The url to send the user for them to login with twitter
  */
 exports.twitter = function (req, res) {
     token.makeTwitterRequest(function (redirectUrl, requestToken, requestTokenSecret, err) {
         if (!err) {
-            res.cookie('twitterToken', {requestToken: requestToken, requestTokenSecret: requestTokenSecret}, { expires: new Date(Date.now() + 9000000), httpOnly: true });
-            res.redirect(redirectUrl);
+            res.json({
+                requestToken: requestToken,
+                requestTokenSecret: requestTokenSecret,
+                redirectUrl: redirectUrl
+            });
         }
     })
 };
 
+
+//----------------------------- MAKE TWITTER ACESS TOKEN
 /**
  * @api {get} /auth/twitter/callback Authenticate with twitter callback
  * @apiName getTwitterCallback
@@ -57,27 +59,38 @@ exports.twitter = function (req, res) {
  * @apiPermission Public
  * @apiVersion 0.0.1
  *
- * @apiDescription This endpoint handles the returns of getTwitter.
+ * @apiDescription This endpoint handles the returns of logging in to twitter.
+ * The user will be updated with any information from twitter that wasn't available.
  *
- * @apiParam {String} requestToken The request token to twitter - part of cookie
- * @apiParam {String} requestTokenSecret The request token secret - part of cookie
- * @apiParam {String} jwt The JWT - part of cookie
+ * @apiParam {Object} twitterToken The object that contains requestToken, requestTokenSecret and oauthVerifier
+ * @apiParam {String} requestToken The request token to twitter
+ * @apiParam {String} requestTokenSecret The request token secret
+ * @apiParam {String} oauthVerifier The verifier received from twitter after authenticating
+ * @apiParam {String} jwt The authetnicating user's JWT
  *
- * @apiSuccess {Redirect} / The home page
+ * @apiSuccess {String} status Success
+ * @apiSuccess {String} message That the user logged in
+ *
+ * @apiError {String} status Error
+ * @apiError {String} message The error message
  *
  */
-//----------------------------- MAKE TWITTER ACESS TOKEN
 exports.twitterCallback = function (req, res) {
-    var t = req.cookies.twitterToken;
-    var userID = token.readJWT(req.cookies.jwt).user_id;
-    token.makeTwitterAccess(t.requestTokenSecret, t.requestToken, req.query.oauth_verifier, function (accessToken, accessTokenSecret) {
+    var t = req.body.twitterToken;
+    var userID = token.readJWT(req.body.jwt).user_id;
+    token.makeTwitterAccess(t.requestTokenSecret, t.requestToken, t.oauthVerifier, function (accessToken, accessTokenSecret) {
         token.verifyTwitterAccess(accessToken, accessTokenSecret, function (twitterDetails) {
-          // TODO:  possibly change the users JWT cookie
+            // TODO:  possibly change the users JWT cookie
             user.twitterDetails(userID, accessToken, accessTokenSecret, twitterDetails)
+                .catch(function(err){
+                    console.log(err);
+                    res.json({status: "Error", message: err});
+                })
+                .then(function(){
+                    res.json({status: "Success", message: "User logged in"});
+                });
         });
-        res.cookie('twitterToken', {}, { expires: new Date(Date.now() - 9000000), httpOnly: true });
-        res.redirect('/');
-    })
+    });
 };
 
 //----------------------------- LOG OUT

@@ -26,11 +26,11 @@
 'use strict';
 var r = require("rethinkdb");
 var log = require('./log.js');
+var Token = require('../helpers/token');
 var table = r.db(process.env.RETHINK_DB).table("users");
 
 //----------------------------- ADD USER
 exports.add = function (userType, userID, socketID) {
-
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
         return c.then(function(conn){
@@ -47,6 +47,7 @@ exports.add = function (userType, userID, socketID) {
             // Catch any errors
             .catch(function(err){
                 console.log("Error: ", err);
+                return err;
             })
             // Close the connection
             .then(function(result){
@@ -62,9 +63,9 @@ exports.seen = function (userID, socketID, url) {
 
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
-        c.then(function(conn){
+        return c.then(function(conn){
             // update socket id
-            table.filter({id:userID}).update({
+            return table.filter({id:userID}).update({
                 socket_id: socketID,
                 last_seen: r.now(),
                 status:'online'
@@ -74,15 +75,17 @@ exports.seen = function (userID, socketID, url) {
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
-            .finally(function(){
+            .finally(function(result){
                 conn.close();
+                return result;
             });
         });
 
         // make log
-        log.add('Updated Socket ID!', userID, url);
+        // log.add('Updated Socket ID!', userID, url);
  };
 
   //----------------------------- DISCONECTED USER
@@ -91,9 +94,9 @@ exports.disconnect = function (socketID) {
 
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
-        c.then(function(conn){
+        return c.then(function(conn){
             // update socket id
-            table.filter({socket_id:socketID}).update({
+            return table.filter({socket_id:socketID}).update({
                 last_seen: r.now(),
                 status:'offline'
 
@@ -102,10 +105,12 @@ exports.disconnect = function (socketID) {
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
-            .finally(function(){
+            .finally(function(result){
                 conn.close();
+                return result;
             });
         });
 
@@ -128,26 +133,60 @@ exports.disconnect = function (socketID) {
 
 
 exports.twitterDetails = function (userID, accessToken, accessTokenSecret, twitterDetails) {
+    var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
+    var dateJoined;
+    return c.then(function (conn) {
+        return table.filter({user_name: twitterDetails.screen_name})
+            .run(conn)
+            .then(function (result) {
+                return result.toArray()
+                    .then(function(userArray){
+                        if (userArray.length < 1) {
+                            return {
+                                userID: userID
+                            }
 
-        var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
-        c.then(function (conn) {
-            // Insert user
-            table.update({
+                        } else {
+                            dateJoined = userArray[0].joined_on;
+                            return {
+                                userID: userArray[0].id,
+                                dateJoined: userArray[0].joined_on
+                            }
+                        }
+                    }).then(function(data){
+                        return table.get(data.userID)
+                            .update({
+                                user_name: twitterDetails.screen_name,
+                                name: twitterDetails.name,
+                                bio: twitterDetails.description,
+                                location: twitterDetails.location,
+                                profile_image: twitterDetails.profile_image_url_https,
+                                timezone: twitterDetails.time_zone,
+                                user_type: "User",
+                                joined_on: data.hasOwnProperty(dateJoined) ? data.dateJoined : r.now()
+                            })
+                            .run(conn)
+                        // Catch any errors
+                            .catch(function (err) {
+                                console.log("Error",err);
+                                return err;
+                            })
+                        // Close the connection
+                            .then(function () {
+                                conn.close();
+                                return {
+                                    jwt:Token.makeJWT(userID, 'User', '/'),
+                                    username: twitterDetails.screen_name,
+                                    photo: twitterDetails.profile_image_url_https,
+                                    dateJoined: dateJoined ? dateJoined : new Date()
+                                }
+                            });
+                    });
+            });
 
-            })
-                .run(conn)
-            // Catch any errors
-                .catch(function (err) {
-                    console.log(err);
-                })
-            // Close the connection
-                .finally(function () {
-                    conn.close();
-                });
-        });
-
+    });
         // make log
-  log.add('Upgrade visitor to user ', userID, "/");
+//   log.add('Upgrade visitor to user ', userID, "/");
 
     };
 
@@ -168,6 +207,7 @@ exports.upgrade = function (userID, photoOriginal, twitterID, lastUpdated) {
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
             .finally(function(){
@@ -196,6 +236,7 @@ exports.del = function (userID) {
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
             .finally(function(){
@@ -219,6 +260,7 @@ exports.forceDelete = function (userID) {
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
             .then(function(result){
@@ -242,6 +284,7 @@ exports.makeAdmin = function(userID, byUserID){
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
             .finally(function(){
@@ -258,24 +301,27 @@ exports.makeAdmin = function(userID, byUserID){
 
 //-----------------------------  ONLINE USERS
 
-exports.onlineAll = function(callback){
+exports.onlineAll = function(){
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
-        c.then(function(conn){
+        return c.then(function(conn){
             // Update user_type to admin
-            table.filter({
+            return table.filter({
                 status: "online"
             })
-            .changes().run(conn)
+            .changes().
+            run(conn)
             // Catch any errors
             .catch(function(err, result){
                 console.log(err);
                 console.log(result);
+                return err;
             })
             // Close the connection
-            .finally(function(){
+            .then(function(result){
                 conn.close();
+                return result;
             });
         });
 
@@ -284,49 +330,67 @@ exports.onlineAll = function(callback){
 
 //-----------------------------  EDIT PROFILE
 
-exports.edit = function(userID, fullName, email, bio, emailMe, notifyMe){
+exports.edit = function(userID, userData){
+
+        // userData should have fullName, email, bio, emailMe, notifyMe
+        var newData = {};
+        // Rename all data to what is used on the database
+        if (userData.fullName != undefined) {
+            newData.full_name = userData.fullName;
+        }
+        if (userData.email != undefined) {
+            newData.email = userData.email;
+        }
+        if (userData.bio != undefined) {
+            newData.bio = userData.bio;
+        }
+        if (userData.emailMe != undefined) {
+            newData.email_me = userData.emailMe;
+        }
+        if (userData.notifyMe != undefined) {
+            newData.notify_me = userData.notifyMe;
+        }
+
         // connect
         var c = r.connect({host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT});
 
-        c.then(function(conn){
+        return c.then(function(conn){
             // Update user_type to admin
-       table.filter({id:userID}).update({
-                last_seen: r.now(),
-                full_name: fullName,
-                email: email,
-                bio: bio,
-                email_me: emailMe,
-                notify_me: notifyMe,
-            })
-            .run(conn)
-            // Catch any errors
-            .catch(function(err){
-                console.log(err);
-            })
-            // Close the connection
-            .finally(function(){
-                conn.close();
-            });
+            return table.filter({id:userID})
+                .update(newData)
+                .run(conn)
+                // Catch any errors
+                .catch(function(err){
+                    console.log(err);
+                    return err;
+                })
+                // Close the connection
+                .then(function(result){
+                    conn.close();
+                    return result;
+                });
         });
     };
 
 //-----------------------------  GET PROFILE
 
 exports.get = function (userID) {
-        var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
-        return c.then(function (conn) {
-            return table.get(userID)
-                .run(conn)
-                // Catch any errors
-                .catch(function(err){
-                    console.log(err);
-                })
-                .then(function(result){
-                    conn.close();
-                    return result;
-                })
-        });
-    };
+    // console.log(userID);
+    var c = r.connect({ host: process.env.RETHINK_HOST, port: process.env.RETHINK_PORT });
+    return c.then(function (conn) {
+        return table.get(userID)
+            .run(conn)
+            // Catch any errors
+            .catch(function(err){
+                console.log(err);
+                return err;
+            })
+            .then(function(result){
+                conn.close();
+                return result;
+            })
+    });
+};
 
 //----------------------------- GET LOGS
 exports.getLogs = function(userID){
@@ -349,6 +413,7 @@ exports.getLogs = function(userID){
             // Catch any errors
             .catch(function(err){
                 console.log(err);
+                return err;
             })
             // Close the connection
             .finally(function(logs){

@@ -25,6 +25,7 @@
     "node-fetch": "^1.5.1",
     "node-twitter-api": "^1.7.0",
     "rethinkdb": "~2.2.2",
+    "slug": "^0.9.1",
     "socket.io": "^1.4.5",
     "underscore": "^1.8.3",
     "uuid-js": "^0.7.5"

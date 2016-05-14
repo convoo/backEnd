@@ -12,8 +12,8 @@ describe('Main Sockets', function () {
     var server;
 
     beforeEach(function(){
-         delete require.cache[require.resolve('../../server.js')];
-         server = require('../../server.js').server;
+        delete require.cache[require.resolve('../../server.js')];
+        server = require('../../server.js').server;
     });
 
     afterEach(function(done){
@@ -24,12 +24,12 @@ describe('Main Sockets', function () {
     it('should be able to connect', function (done) {
         var client = sockets.connect(socketsUrl, options);
         client.on('connect', function(){
-             client.disconnect();
-             done();
+            client.disconnect();
+            done();
         });
     });
 
-    describe('Hello', function () {
+    describe('#Hello', function () {
         it('should send a message on connection', function (done) {
             var client = sockets.connect(socketsUrl, options);
             client.on('hello', function(data){
@@ -55,7 +55,7 @@ describe('Main Sockets', function () {
             setTimeout(function(){
                 client.connected.should.be.false();
                 done();
-             }, 3);
+            }, 3);
         });
     });
 });

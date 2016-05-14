@@ -14,7 +14,7 @@ describe('Main API', function () {
         server.close(done);
     });
 
-    describe('Index', function () {
+    describe('#index', function () {
 
         it('should return a welcome message', function (done) {
             request(server)

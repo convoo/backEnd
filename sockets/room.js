@@ -6,10 +6,21 @@ var room = require('../models/room.js');
 
 //----------------------------- ADD ROOM
 exports.add = function (msg) {
-        var userID = token.readJWT(msg.jwt).user_id;
-        var roomName = msg.roomName;
-        console.log(userID);
-        console.log(roomName);
-        room.add(userID, roomName);
+    var userID = token.readJWT(msg.jwt).user_id;
+    var roomData = msg.roomData;
+    // console.log(userID);
+    // console.log(roomData);
+    return room.add(userID, roomData);
 };
 
+exports.get = function (msg) {
+    return room.get(msg.roomID);
+}
+
+exports.getBySlug = function (msg) {
+    return room.getBySlug(msg.roomSlug);
+}
+
+exports.forceDelete = function (msg) {
+    return room.forceDelete(msg.roomID);
+}
